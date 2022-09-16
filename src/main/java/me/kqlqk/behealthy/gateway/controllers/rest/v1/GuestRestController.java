@@ -1,4 +1,4 @@
-package me.kqlqk.BeHealthy.main_rest_api.controllers.rest.v1;
+package me.kqlqk.behealthy.gateway.controllers.rest.v1;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

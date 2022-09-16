@@ -9,15 +9,15 @@
         <relativePath/>
     </parent>
 
-    <groupId>me.kqlqk.BeHealthy</groupId>
-    <artifactId>main_rest_api</artifactId>
+    <groupId>me.kqlqk.behealthy</groupId>
+    <artifactId>gateway</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>beHealthyMainRestApi</name>
+    <name>gateway</name>
 
     <properties>
         <java.version>11</java.version>
-        <start-class>me.kqlqk.BeHealthy.main_rest_api.BeHealthyMainRestApi</start-class>
+        <start-class>me.kqlqk.behealthy.gateway.BeHealthyGateway</start-class>
     </properties>
 
 

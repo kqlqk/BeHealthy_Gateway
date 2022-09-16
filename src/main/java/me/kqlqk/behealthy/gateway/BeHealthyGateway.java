@@ -1,14 +1,14 @@
-package me.kqlqk.BeHealthy.main_rest_api;
+package me.kqlqk.behealthy.gateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
-public class BeHealthyMainRestApi {
+public class BeHealthyGateway {
 
     public static void main(String[] args) {
-        SpringApplication.run(BeHealthyMainRestApi.class, args);
+        SpringApplication.run(BeHealthyGateway.class, args);
     }
 
 }
