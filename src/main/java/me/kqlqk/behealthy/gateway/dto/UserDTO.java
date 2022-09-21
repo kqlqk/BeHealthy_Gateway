@@ -6,6 +6,8 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class UserDTO {
+    private long id;
+
     @Pattern(regexp = "[a-zA-z]*", message = "Name should contains only letters")
     @Size(min = 2, max = 20, message = "Name should be between 2 and 20 letters")
     private String name;
@@ -20,6 +22,14 @@ public class UserDTO {
     @Min(value = 3, message = "Age should be between 3 and 120")
     @Max(value = 120, message = "Age should be between 3 and 120")
     private byte age;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

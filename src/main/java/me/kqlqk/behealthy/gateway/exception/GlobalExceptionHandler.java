@@ -14,7 +14,7 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(UserException.class)
+    @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionDTO handle(RuntimeException e) {
         ExceptionDTO exceptionDTO = new ExceptionDTO();
