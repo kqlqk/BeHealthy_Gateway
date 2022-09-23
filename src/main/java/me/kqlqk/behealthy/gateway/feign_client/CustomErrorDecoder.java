@@ -27,7 +27,7 @@ public class CustomErrorDecoder implements ErrorDecoder {
             case 400:
                 return new RuntimeException(info.get("info") != null ? info.get("info") : "Bad request");
             case 404:
-                return new RuntimeException(info.get("info") != null ? info.get("info") : "Not found");
+                return new RuntimeException(info.get("info") != null ? info.get("info") : "Page not found");
             default:
                 return errorDecoder.decode(s, response);
         }

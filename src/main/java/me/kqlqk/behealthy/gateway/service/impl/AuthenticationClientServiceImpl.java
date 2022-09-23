@@ -3,18 +3,17 @@ package me.kqlqk.behealthy.gateway.service.impl;
 import me.kqlqk.behealthy.gateway.dto.UserDTO;
 import me.kqlqk.behealthy.gateway.exception.exceptions.UserException;
 import me.kqlqk.behealthy.gateway.feign_client.AuthenticationClient;
-import me.kqlqk.behealthy.gateway.service.UserService;
+import me.kqlqk.behealthy.gateway.service.AuthenticationClientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class UserServiceImpl implements UserService {
+public class AuthenticationClientServiceImpl implements AuthenticationClientService {
     private final AuthenticationClient authenticationClient;
 
     @Autowired
-    public UserServiceImpl(AuthenticationClient authenticationClient) {
+    public AuthenticationClientServiceImpl(AuthenticationClient authenticationClient) {
         this.authenticationClient = authenticationClient;
     }
 
@@ -39,5 +38,18 @@ public class UserServiceImpl implements UserService {
                 .stream()
                 .filter(user -> user.getEmail().equals(email))
                 .findFirst().orElseThrow(() -> new UserException("User with email = " + email + " not found"));
+    }
+
+    @Override
+    public UserDTO getUserFromContext() {
+        String email;
+
+        try {
+            email = SecurityContextHolder.getContext().getAuthentication().getName();
+        } catch (NullPointerException e) {
+            throw new UserException("Authentication not found for user");
+        }
+
+        return getByEmail(email);
     }
 }

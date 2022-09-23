@@ -5,7 +5,7 @@ import me.kqlqk.behealthy.gateway.dto.ExceptionDTO;
 import me.kqlqk.behealthy.gateway.dto.UserDTO;
 import me.kqlqk.behealthy.gateway.exception.exceptions.TokenException;
 import me.kqlqk.behealthy.gateway.feign_client.AuthenticationClient;
-import me.kqlqk.behealthy.gateway.service.UserService;
+import me.kqlqk.behealthy.gateway.service.AuthenticationClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,17 +24,18 @@ import java.util.Map;
 @Component
 public class AuthenticationFilter extends OncePerRequestFilter {
     private final AuthenticationClient authenticationClient;
-    private final UserService userService;
+    private final AuthenticationClientService authenticationClientService;
     private final UserDetailsService userDetailsService;
     private final String[] urisNotToCheck = {
-            "/registration",
-            "/login"
+            "/api/v1", "/api/v1/",
+            "/api/v1/registration", "/api/v1/registration/",
+            "/api/v1/login", "/api/v1/login/"
     };
 
     @Autowired
-    public AuthenticationFilter(AuthenticationClient authenticationClient, UserService userService, UserDetailsService userDetailsService) {
+    public AuthenticationFilter(AuthenticationClient authenticationClient, AuthenticationClientService authenticationClientService, UserDetailsService userDetailsService) {
         this.authenticationClient = authenticationClient;
-        this.userService = userService;
+        this.authenticationClientService = authenticationClientService;
         this.userDetailsService = userDetailsService;
     }
 
@@ -45,7 +46,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         Map<String, String> tokens;
 
         for (String uri : urisNotToCheck) {
-            if (request.getRequestURI().contains(uri)) {
+            if (request.getRequestURI().equals(uri)) {
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -57,9 +58,9 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             postException(e.getMessage(), response);
             return;
         }
-
         String access = tokens.get("access");
         String refresh = tokens.get("refresh");
+
         if (!authenticationClient.validateRefreshTokenFromRequest("Bearer_" + refresh).isValid()) {
             postException("Refresh token isn't valid, try to log in one more time", response);
             return;
@@ -72,19 +73,23 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             }
 
             String userEmail = authenticationClient.getEmailFromRefreshToken("Bearer_" + refresh).get("email");
-            UserDTO userDTO = userService.getByEmail(userEmail);
+            UserDTO userDTO = authenticationClientService.getByEmail(userEmail);
             tokens = authenticationClient.updateTokensForUser(userDTO.getId());
 
             response.setHeader("Authorization_access", "Bearer_" + tokens.get("access"));
             response.setHeader("Authorization_refresh", "Bearer_" + tokens.get("refresh"));
+            response.setStatus(HttpServletResponse.SC_EXPECTATION_FAILED);
+            return;
         }
 
         String userEmail = authenticationClient.getEmailFromRefreshToken("Bearer_" + tokens.get("refresh")).get("email");
-        SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken(
+        SecurityContextHolder
+                .getContext()
+                .setAuthentication(new UsernamePasswordAuthenticationToken(
                         userDetailsService.loadUserByUsername(userEmail),
                         null,
                         userDetailsService.loadUserByUsername(userEmail).getAuthorities()));
+
         filterChain.doFilter(request, response);
     }
 

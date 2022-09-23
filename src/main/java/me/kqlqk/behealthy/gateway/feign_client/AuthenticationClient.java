@@ -1,6 +1,5 @@
 package me.kqlqk.behealthy.gateway.feign_client;
 
-import feign.HeaderMap;
 import me.kqlqk.behealthy.gateway.dto.UserDTO;
 import me.kqlqk.behealthy.gateway.dto.ValidateDTO;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -8,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @FeignClient(name = "AuthenticationService")
 public interface AuthenticationClient {
@@ -38,4 +36,10 @@ public interface AuthenticationClient {
 
     @GetMapping("/api/v1/auth/get_email_from_refresh_token")
     Map<String, String> getEmailFromRefreshToken(@RequestHeader("Authorization_refresh") String refreshToken);
+
+    @GetMapping("/api/v1/users/{id}/new_access_token")
+    Map<String, String> getNewAccessToken(@PathVariable long id);
+
+    @GetMapping("/api/v1/users/{id}/new_refresh_token")
+    Map<String, String> getNewRefreshToken(@PathVariable long id);
 }

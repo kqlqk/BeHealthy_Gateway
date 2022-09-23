@@ -4,7 +4,6 @@ import me.kqlqk.behealthy.gateway.cfg.filters.AuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -19,6 +18,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class Config {
     private final UserDetailsService userDetailsService;
     private final AuthenticationFilter authFilter;
+    private final String[] urisForGuests = {
+            "/api/v1",
+            "/api/v1/login",
+            "/api/v1/registration"
+    };
+    private final String[] urisForUsers = {
+            "/api/v1/users/**",
+    };
 
     @Autowired
     public Config(UserDetailsService userDetailsService, AuthenticationFilter authFilter) {
@@ -39,8 +46,8 @@ public class Config {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/v1/**").permitAll()
-                .antMatchers("/api/v1/users/**").hasRole("USER")
+                .antMatchers(urisForGuests).permitAll()
+                .antMatchers(urisForUsers).hasRole("USER")
                 .and()
                 .authenticationManager(authenticationManager)
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)

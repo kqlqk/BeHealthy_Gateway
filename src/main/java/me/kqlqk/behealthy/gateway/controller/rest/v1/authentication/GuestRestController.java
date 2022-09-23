@@ -4,7 +4,7 @@ import me.kqlqk.behealthy.gateway.dto.LoginDTO;
 import me.kqlqk.behealthy.gateway.dto.UserDTO;
 import me.kqlqk.behealthy.gateway.exception.exceptions.UserException;
 import me.kqlqk.behealthy.gateway.feign_client.AuthenticationClient;
-import me.kqlqk.behealthy.gateway.service.UserService;
+import me.kqlqk.behealthy.gateway.service.AuthenticationClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,26 +21,33 @@ import java.util.Map;
 @RequestMapping("/api/v1")
 public class GuestRestController {
     private final AuthenticationClient authenticationClient;
-    private final UserService userService;
+    private final AuthenticationClientService authenticationClientService;
     private final PasswordEncoder encoder;
 
     @Autowired
-    public GuestRestController(AuthenticationClient authenticationClient, UserService userService, PasswordEncoder encoder) {
+    public GuestRestController(AuthenticationClient authenticationClient, AuthenticationClientService authenticationClientService, PasswordEncoder encoder) {
         this.authenticationClient = authenticationClient;
-        this.userService = userService;
+        this.authenticationClientService = authenticationClientService;
         this.encoder = encoder;
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<?> createUser(@RequestBody @Valid UserDTO userDTO) {
+    public ResponseEntity<?> createUser(@RequestBody @Valid UserDTO userDTO, HttpServletResponse response) {
         userDTO.setPassword(encoder.encode(userDTO.getPassword()));
+
         authenticationClient.createUser(userDTO);
+
+        String access = authenticationClient.getNewAccessToken(authenticationClientService.getByEmail(userDTO.getEmail()).getId()).get("access");
+        String refresh = authenticationClient.getNewRefreshToken(authenticationClientService.getByEmail(userDTO.getEmail()).getId()).get("refresh");
+
+        response.setHeader("Authorization_access", "Bearer_" + access);
+        response.setHeader("Authorization_refresh", "Bearer_" + refresh);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> logInUser(@RequestBody @Valid LoginDTO loginDTO, HttpServletResponse response) {
-        UserDTO savedUser = userService.getByEmail(loginDTO.getEmail());
+        UserDTO savedUser = authenticationClientService.getByEmail(loginDTO.getEmail());
 
         if (!encoder.matches(loginDTO.getPassword(), savedUser.getPassword())) {
             throw new UserException("Bad credentials");
