@@ -37,8 +37,8 @@ public class GuestRestController {
 
         authenticationClient.createUser(userDTO);
 
-        String access = authenticationClient.getNewAccessToken(authenticationClientService.getByEmail(userDTO.getEmail()).getId()).get("access");
-        String refresh = authenticationClient.getNewRefreshToken(authenticationClientService.getByEmail(userDTO.getEmail()).getId()).get("refresh");
+        String access = authenticationClient.getNewAccessToken(authenticationClient.getUserByEmail(userDTO.getEmail()).getId()).get("access");
+        String refresh = authenticationClient.getNewRefreshToken(authenticationClient.getUserByEmail(userDTO.getEmail()).getId()).get("refresh");
 
         response.setHeader("Authorization_access", "Bearer_" + access);
         response.setHeader("Authorization_refresh", "Bearer_" + refresh);
@@ -47,7 +47,7 @@ public class GuestRestController {
 
     @PostMapping("/login")
     public ResponseEntity<?> logInUser(@RequestBody @Valid LoginDTO loginDTO, HttpServletResponse response) {
-        UserDTO savedUser = authenticationClientService.getByEmail(loginDTO.getEmail());
+        UserDTO savedUser = authenticationClient.getUserByEmail(loginDTO.getEmail());
 
         if (!encoder.matches(loginDTO.getPassword(), savedUser.getPassword())) {
             throw new UserException("Bad credentials");

@@ -73,7 +73,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             }
 
             String userEmail = authenticationClient.getEmailFromRefreshToken("Bearer_" + refresh).get("email");
-            UserDTO userDTO = authenticationClientService.getByEmail(userEmail);
+            UserDTO userDTO = authenticationClient.getUserByEmail(userEmail);
             tokens = authenticationClient.updateTokensForUser(userDTO.getId());
 
             response.setHeader("Authorization_access", "Bearer_" + tokens.get("access"));

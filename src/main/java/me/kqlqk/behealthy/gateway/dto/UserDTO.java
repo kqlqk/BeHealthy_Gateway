@@ -1,7 +1,5 @@
 package me.kqlqk.behealthy.gateway.dto;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -18,10 +16,6 @@ public class UserDTO {
     @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,50}$",
             message = "Password must be between 8 and 50 characters, at least: 1 number, 1 uppercase letter, 1 lowercase letter")
     private String password;
-
-    @Min(value = 3, message = "Age should be between 3 and 120")
-    @Max(value = 120, message = "Age should be between 3 and 120")
-    private byte age;
 
     public long getId() {
         return id;
@@ -53,13 +47,5 @@ public class UserDTO {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public byte getAge() {
-        return age;
-    }
-
-    public void setAge(byte age) {
-        this.age = age;
     }
 }

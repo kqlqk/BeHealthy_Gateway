@@ -23,7 +23,7 @@ public class UserRestController {
     }
 
     @GetMapping("/users/{id}")
-    public UserDTO getCurrentUsers(@PathVariable long id) {
+    public UserDTO getCurrentUser(@PathVariable long id) {
         if (id != authenticationClientService.getUserFromContext().getId()) {
             throw new UserException("Id = " + id + " is not your, please, use id = " +
                     authenticationClientService.getUserFromContext().getId());

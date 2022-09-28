@@ -18,29 +18,6 @@ public class AuthenticationClientServiceImpl implements AuthenticationClientServ
     }
 
     @Override
-    public boolean existsByEmail(String email) {
-        if (email == null || email.equals("")) {
-            throw new IllegalArgumentException("Email cannot be null");
-        }
-
-        return authenticationClient.getAllUsers()
-                .stream()
-                .anyMatch(user -> user.getEmail().equals(email));
-    }
-
-    @Override
-    public UserDTO getByEmail(String email) {
-        if (email == null || email.equals("")) {
-            throw new IllegalArgumentException("Email cannot be null");
-        }
-
-        return authenticationClient.getAllUsers()
-                .stream()
-                .filter(user -> user.getEmail().equals(email))
-                .findFirst().orElseThrow(() -> new UserException("User with email = " + email + " not found"));
-    }
-
-    @Override
     public UserDTO getUserFromContext() {
         String email;
 
@@ -50,6 +27,6 @@ public class AuthenticationClientServiceImpl implements AuthenticationClientServ
             throw new UserException("Authentication not found for user");
         }
 
-        return getByEmail(email);
+        return authenticationClient.getUserByEmail(email);
     }
 }

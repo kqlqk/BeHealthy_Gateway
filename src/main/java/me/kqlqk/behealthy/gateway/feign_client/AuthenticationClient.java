@@ -16,6 +16,9 @@ public interface AuthenticationClient {
     @GetMapping("/api/v1/users")
     List<UserDTO> getAllUsers();
 
+    @GetMapping("/api/v1/users")
+    UserDTO getUserByEmail(@RequestParam String email);
+
     @PostMapping("/api/v1/users")
     void createUser(@RequestBody UserDTO userDTO);
 
