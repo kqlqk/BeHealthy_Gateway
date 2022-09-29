@@ -1,6 +1,6 @@
 package me.kqlqk.behealthy.gateway.service.impl;
 
-import me.kqlqk.behealthy.gateway.dto.UserDTO;
+import me.kqlqk.behealthy.gateway.dto.authenticationService.UserAuthDTO;
 import me.kqlqk.behealthy.gateway.exception.exceptions.UserException;
 import me.kqlqk.behealthy.gateway.feign_client.AuthenticationClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +29,12 @@ public class UserDetailServiceImpl implements UserDetailsService {
             throw new IllegalArgumentException("Email cannot be null");
         }
 
-        for (UserDTO userDTO : authenticationClient.getAllUsers()) {
-            if (userDTO.getEmail().equals(email)) {
+        for (UserAuthDTO userAuthDTO : authenticationClient.getAllUsers()) {
+            if (userAuthDTO.getEmail().equals(email)) {
                 Set<GrantedAuthority> authorities = new HashSet<>();
                 authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 
-                return new org.springframework.security.core.userdetails.User(email, userDTO.getPassword(), authorities);
+                return new org.springframework.security.core.userdetails.User(email, userAuthDTO.getPassword(), authorities);
             }
         }
 

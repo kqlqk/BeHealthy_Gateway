@@ -1,4 +1,4 @@
-package me.kqlqk.behealthy.gateway.dto;
+package me.kqlqk.behealthy.gateway.dto.authenticationService;
 
 import javax.validation.constraints.NotBlank;
 

@@ -1,10 +1,10 @@
 package me.kqlqk.behealthy.gateway.service;
 
-import me.kqlqk.behealthy.gateway.dto.UserDTO;
+import me.kqlqk.behealthy.gateway.dto.authenticationService.UserAuthDTO;
 import org.springframework.stereotype.Service;
 
 @Service
 public interface AuthenticationClientService {
-    UserDTO getUserFromContext();
+    UserAuthDTO getUserFromContext();
 
 }

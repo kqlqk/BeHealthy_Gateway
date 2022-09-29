@@ -1,9 +1,9 @@
-package me.kqlqk.behealthy.gateway.dto;
+package me.kqlqk.behealthy.gateway.dto.authenticationService;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-public class UserDTO {
+public class UserAuthDTO {
     private long id;
 
     @Pattern(regexp = "[a-zA-z]*", message = "Name should contains only letters")

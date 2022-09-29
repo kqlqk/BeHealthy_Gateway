@@ -1,6 +1,6 @@
 package me.kqlqk.behealthy.gateway.feign_client;
 
-import me.kqlqk.behealthy.gateway.dto.UserDTO;
+import me.kqlqk.behealthy.gateway.dto.authenticationService.UserAuthDTO;
 import me.kqlqk.behealthy.gateway.dto.ValidateDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
@@ -10,20 +10,21 @@ import java.util.Map;
 
 @FeignClient(name = "AuthenticationService")
 public interface AuthenticationClient {
+
     @GetMapping("/api/v1/users/{id}")
-    UserDTO getUserById(@PathVariable long id);
+    UserAuthDTO getUserById(@PathVariable long id);
 
     @GetMapping("/api/v1/users")
-    List<UserDTO> getAllUsers();
+    List<UserAuthDTO> getAllUsers();
 
     @GetMapping("/api/v1/users")
-    UserDTO getUserByEmail(@RequestParam String email);
+    UserAuthDTO getUserByEmail(@RequestParam String email);
 
     @PostMapping("/api/v1/users")
-    void createUser(@RequestBody UserDTO userDTO);
+    void createUser(@RequestBody UserAuthDTO userAuthDTO);
 
     @PostMapping("/api/v1/users/{id}")
-    void updateUser(@PathVariable long id, @RequestBody UserDTO userDTO);
+    void updateUser(@PathVariable long id, @RequestBody UserAuthDTO userAuthDTO);
 
     @GetMapping("/api/v1/auth/validate_access_token")
     ValidateDTO validateAccessTokenFromRequest(@RequestHeader("Authorization_access") String accessToken);

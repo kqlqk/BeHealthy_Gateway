@@ -1,6 +1,6 @@
 package me.kqlqk.behealthy.gateway.service.impl;
 
-import me.kqlqk.behealthy.gateway.dto.UserDTO;
+import me.kqlqk.behealthy.gateway.dto.authenticationService.UserAuthDTO;
 import me.kqlqk.behealthy.gateway.exception.exceptions.UserException;
 import me.kqlqk.behealthy.gateway.feign_client.AuthenticationClient;
 import me.kqlqk.behealthy.gateway.service.AuthenticationClientService;
@@ -18,7 +18,7 @@ public class AuthenticationClientServiceImpl implements AuthenticationClientServ
     }
 
     @Override
-    public UserDTO getUserFromContext() {
+    public UserAuthDTO getUserFromContext() {
         String email;
 
         try {

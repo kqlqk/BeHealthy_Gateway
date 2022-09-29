@@ -2,7 +2,7 @@ package me.kqlqk.behealthy.gateway.cfg.filters;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.kqlqk.behealthy.gateway.dto.ExceptionDTO;
-import me.kqlqk.behealthy.gateway.dto.UserDTO;
+import me.kqlqk.behealthy.gateway.dto.authenticationService.UserAuthDTO;
 import me.kqlqk.behealthy.gateway.exception.exceptions.TokenException;
 import me.kqlqk.behealthy.gateway.feign_client.AuthenticationClient;
 import me.kqlqk.behealthy.gateway.service.AuthenticationClientService;
@@ -73,8 +73,8 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             }
 
             String userEmail = authenticationClient.getEmailFromRefreshToken("Bearer_" + refresh).get("email");
-            UserDTO userDTO = authenticationClient.getUserByEmail(userEmail);
-            tokens = authenticationClient.updateTokensForUser(userDTO.getId());
+            UserAuthDTO userAuthDTO = authenticationClient.getUserByEmail(userEmail);
+            tokens = authenticationClient.updateTokensForUser(userAuthDTO.getId());
 
             response.setHeader("Authorization_access", "Bearer_" + tokens.get("access"));
             response.setHeader("Authorization_refresh", "Bearer_" + tokens.get("refresh"));
