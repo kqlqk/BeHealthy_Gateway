@@ -74,14 +74,16 @@ public class UserRestController {
         return kcalCounterClient.getUserConditionByUserId(id);
     }
 
-    @GetMapping("/users/{id}/kcals")
-    public KcalsInfoDTO getCurrentUserKcalsInfo(@PathVariable long id) {
+    @PutMapping("/users/{id}/condition")
+    public ResponseEntity<?> updateUserCondition(@PathVariable long id, @RequestBody @Valid UserConditionDTO userConditionDTO) {
         if (id != authenticationClientService.getUserFromContext().getId()) {
             throw new UserException("Id = " + id + " is not your, please, use id = " +
                     authenticationClientService.getUserFromContext().getId());
         }
 
-        return kcalCounterClient.getKcalsInfoByUserId(id);
+        kcalCounterClient.updateUserCondition(id, userConditionDTO);
+
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/users/{id}/condition")
@@ -90,6 +92,16 @@ public class UserRestController {
         kcalCounterClient.createUserCondition(userConditionDTO);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/users/{id}/kcals")
+    public KcalsInfoDTO getCurrentUserKcalsInfo(@PathVariable long id) {
+        if (id != authenticationClientService.getUserFromContext().getId()) {
+            throw new UserException("Id = " + id + " is not your, please, use id = " +
+                    authenticationClientService.getUserFromContext().getId());
+        }
+
+        return kcalCounterClient.getKcalsInfoByUserId(id);
     }
 
 }
