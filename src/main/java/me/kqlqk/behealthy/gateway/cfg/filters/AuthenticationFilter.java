@@ -24,7 +24,6 @@ import java.util.Map;
 @Component
 public class AuthenticationFilter extends OncePerRequestFilter {
     private final AuthenticationClient authenticationClient;
-    private final AuthenticationClientService authenticationClientService;
     private final UserDetailsService userDetailsService;
     private final String[] urisNotToCheck = {
             "/api/v1", "/api/v1/",
@@ -33,9 +32,8 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     };
 
     @Autowired
-    public AuthenticationFilter(AuthenticationClient authenticationClient, AuthenticationClientService authenticationClientService, UserDetailsService userDetailsService) {
+    public AuthenticationFilter(AuthenticationClient authenticationClient, UserDetailsService userDetailsService) {
         this.authenticationClient = authenticationClient;
-        this.authenticationClientService = authenticationClientService;
         this.userDetailsService = userDetailsService;
     }
 
@@ -78,8 +76,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
             response.setHeader("Authorization_access", "Bearer_" + tokens.get("access"));
             response.setHeader("Authorization_refresh", "Bearer_" + tokens.get("refresh"));
-            response.setStatus(HttpServletResponse.SC_EXPECTATION_FAILED);
-            return;
+            response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
         }
 
         String userEmail = authenticationClient.getEmailFromRefreshToken("Bearer_" + tokens.get("refresh")).get("email");
