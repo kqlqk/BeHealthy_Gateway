@@ -44,7 +44,13 @@ public class GuestRestController {
 
     @PostMapping("/login")
     public ResponseEntity<?> logInUser(@RequestBody @Valid LoginDTO loginDTO, HttpServletResponse response) {
-        UserAuthDTO savedUser = authenticationClient.getUserByEmail(loginDTO.getEmail());
+        UserAuthDTO savedUser = null;
+
+        try {
+            savedUser = authenticationClient.getUserByEmail(loginDTO.getEmail());
+        } catch (RuntimeException e) {
+            throw new UserException("Bad credentials");
+        }
 
         if (!encoder.matches(loginDTO.getPassword(), savedUser.getPassword())) {
             throw new UserException("Bad credentials");
