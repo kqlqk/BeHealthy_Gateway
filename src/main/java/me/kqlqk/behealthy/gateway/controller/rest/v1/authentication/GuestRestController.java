@@ -44,7 +44,7 @@ public class GuestRestController {
 
     @PostMapping("/login")
     public ResponseEntity<?> logInUser(@RequestBody @Valid LoginDTO loginDTO, HttpServletResponse response) {
-        UserAuthDTO savedUser = null;
+        UserAuthDTO savedUser;
 
         try {
             savedUser = authenticationClient.getUserByEmail(loginDTO.getEmail());

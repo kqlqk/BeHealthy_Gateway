@@ -45,7 +45,7 @@ public class UserRestController {
         return authenticationClient.getUserById(id);
     }
 
-    @PutMapping("/users/{id}")
+    @PatchMapping("/users/{id}")
     public void updatePasswordForCurrentUser(@PathVariable long id, @RequestBody @Valid ChangePasswordDTO changePasswordDTO) {
         if (id != authenticationClientService.getUserFromContext().getId()) {
             throw new UserException("Id = " + id + " is not your, please, use id = " +
