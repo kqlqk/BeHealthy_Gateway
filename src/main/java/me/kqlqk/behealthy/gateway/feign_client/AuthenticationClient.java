@@ -1,7 +1,7 @@
 package me.kqlqk.behealthy.gateway.feign_client;
 
-import me.kqlqk.behealthy.gateway.dto.authenticationService.UserAuthDTO;
 import me.kqlqk.behealthy.gateway.dto.ValidateDTO;
+import me.kqlqk.behealthy.gateway.dto.authenticationService.UserAuthDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 

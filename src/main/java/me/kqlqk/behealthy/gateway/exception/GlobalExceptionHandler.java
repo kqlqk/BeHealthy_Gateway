@@ -1,7 +1,6 @@
 package me.kqlqk.behealthy.gateway.exception;
 
 import me.kqlqk.behealthy.gateway.dto.ExceptionDTO;
-import me.kqlqk.behealthy.gateway.exception.exceptions.UserException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
