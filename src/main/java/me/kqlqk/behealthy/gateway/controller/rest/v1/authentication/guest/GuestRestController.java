@@ -1,4 +1,4 @@
-package me.kqlqk.behealthy.gateway.controller.rest.v1.authentication;
+package me.kqlqk.behealthy.gateway.controller.rest.v1.authentication.guest;
 
 import me.kqlqk.behealthy.gateway.dto.authenticationService.LoginDTO;
 import me.kqlqk.behealthy.gateway.dto.authenticationService.UserAuthDTO;
