@@ -56,6 +56,11 @@ public class UserDailyFoodRestController {
                     authenticationClientService.getUserFromContext().getId());
         }
 
+        kcalCounterClient.getDailyFoodsForUser(id)
+                .stream()
+                .filter(product -> product.getId() == productId)
+                .findAny()
+                .orElseThrow(() -> new UserException("Daily food with id = " + productId + " not found for user with userId = " + id));
         kcalCounterClient.deleteDailyFoodFromUser(productId);
 
         return ResponseEntity.ok().build();

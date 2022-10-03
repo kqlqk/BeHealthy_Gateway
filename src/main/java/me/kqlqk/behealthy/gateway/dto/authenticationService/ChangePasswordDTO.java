@@ -1,8 +1,10 @@
 package me.kqlqk.behealthy.gateway.dto.authenticationService;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 public class ChangePasswordDTO {
+    @NotBlank(message = "Old password cannot be blank")
     private String oldPassword;
 
     @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,50}$",

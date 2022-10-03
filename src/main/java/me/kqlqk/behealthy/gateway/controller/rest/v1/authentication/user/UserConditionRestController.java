@@ -50,6 +50,11 @@ public class UserConditionRestController {
 
     @PostMapping("/condition")
     public ResponseEntity<?> createUserCondition(@PathVariable long id, @RequestBody @Valid UserConditionDTO userConditionDTO) {
+        if (id != authenticationClientService.getUserFromContext().getId()) {
+            throw new UserException("Id = " + id + " is not your, please, use id = " +
+                    authenticationClientService.getUserFromContext().getId());
+        }
+
         userConditionDTO.setUserId(id);
         kcalCounterClient.createUserCondition(userConditionDTO);
 
