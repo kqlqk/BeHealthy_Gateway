@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @RestController
@@ -37,7 +38,9 @@ public class UserConditionRestController {
     }
 
     @PutMapping("/condition")
-    public ResponseEntity<?> updateUserCondition(@PathVariable long id, @RequestBody @Valid UserConditionDTO userConditionDTO) {
+    public ResponseEntity<?> updateUserCondition(@PathVariable long id,
+                                                 @RequestBody @Valid UserConditionDTO userConditionDTO,
+                                                 HttpServletResponse response) {
         if (id != authenticationClientService.getUserFromContext().getId()) {
             throw new UserException("Id = " + id + " is not your, please, use id = " +
                     authenticationClientService.getUserFromContext().getId());
@@ -45,11 +48,17 @@ public class UserConditionRestController {
 
         kcalCounterClient.updateUserCondition(id, userConditionDTO);
 
+        if (response.getStatus() != 200) {
+            return ResponseEntity.status(response.getStatus()).build();
+        }
+
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/condition")
-    public ResponseEntity<?> createUserCondition(@PathVariable long id, @RequestBody @Valid UserConditionDTO userConditionDTO) {
+    public ResponseEntity<?> createUserCondition(@PathVariable long id,
+                                                 @RequestBody @Valid UserConditionDTO userConditionDTO,
+                                                 HttpServletResponse response) {
         if (id != authenticationClientService.getUserFromContext().getId()) {
             throw new UserException("Id = " + id + " is not your, please, use id = " +
                     authenticationClientService.getUserFromContext().getId());
@@ -57,6 +66,10 @@ public class UserConditionRestController {
 
         userConditionDTO.setUserId(id);
         kcalCounterClient.createUserCondition(userConditionDTO);
+
+        if (response.getStatus() != 200) {
+            return ResponseEntity.status(response.getStatus()).build();
+        }
 
         return ResponseEntity.ok().build();
     }

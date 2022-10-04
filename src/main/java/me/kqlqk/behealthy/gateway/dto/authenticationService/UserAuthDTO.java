@@ -2,7 +2,6 @@ package me.kqlqk.behealthy.gateway.dto.authenticationService;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 

@@ -39,6 +39,11 @@ public class GuestRestController {
 
         response.setHeader("Authorization_access", "Bearer_" + access);
         response.setHeader("Authorization_refresh", "Bearer_" + refresh);
+
+        if (response.getStatus() != 200) {
+            return ResponseEntity.status(response.getStatus()).build();
+        }
+
         return ResponseEntity.ok().build();
     }
 
@@ -60,6 +65,11 @@ public class GuestRestController {
 
         response.setHeader("Authorization_access", "Bearer_" + tokens.get("access"));
         response.setHeader("Authorization_refresh", "Bearer_" + tokens.get("refresh"));
+
+        if (response.getStatus() != 200) {
+            return ResponseEntity.status(response.getStatus()).build();
+        }
+
         return ResponseEntity.ok().build();
     }
 

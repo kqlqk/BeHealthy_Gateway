@@ -2,7 +2,9 @@ package me.kqlqk.behealthy.gateway.dto.kcalCounterService;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Pattern;
 
 public class DailyFoodDTO {
     public interface WithoutUserIdView {

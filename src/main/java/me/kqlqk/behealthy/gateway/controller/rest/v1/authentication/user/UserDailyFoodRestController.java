@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -37,7 +38,9 @@ public class UserDailyFoodRestController {
     }
 
     @PostMapping("/daily_food")
-    public ResponseEntity<?> addDailyFoodsForUser(@PathVariable long id, @RequestBody @Valid DailyFoodDTO dailyFoodDTO) {
+    public ResponseEntity<?> addDailyFoodsForUser(@PathVariable long id,
+                                                  @RequestBody @Valid DailyFoodDTO dailyFoodDTO,
+                                                  HttpServletResponse response) {
         if (id != authenticationClientService.getUserFromContext().getId()) {
             throw new UserException("Id = " + id + " is not your, please, use id = " +
                     authenticationClientService.getUserFromContext().getId());
@@ -46,11 +49,17 @@ public class UserDailyFoodRestController {
         dailyFoodDTO.setUserId(id);
         kcalCounterClient.addDailyFoodForUser(dailyFoodDTO);
 
+        if (response.getStatus() != 200) {
+            return ResponseEntity.status(response.getStatus()).build();
+        }
+
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/daily_food")
-    public ResponseEntity<?> deleteDailyFoodsForUser(@PathVariable long id, @RequestParam long productId) {
+    public ResponseEntity<?> deleteDailyFoodsForUser(@PathVariable long id,
+                                                     @RequestParam long productId,
+                                                     HttpServletResponse response) {
         if (id != authenticationClientService.getUserFromContext().getId()) {
             throw new UserException("Id = " + id + " is not your, please, use id = " +
                     authenticationClientService.getUserFromContext().getId());
@@ -62,6 +71,10 @@ public class UserDailyFoodRestController {
                 .findAny()
                 .orElseThrow(() -> new UserException("Daily food with id = " + productId + " not found for user with userId = " + id));
         kcalCounterClient.deleteDailyFoodFromUser(productId);
+
+        if (response.getStatus() != 200) {
+            return ResponseEntity.status(response.getStatus()).build();
+        }
 
         return ResponseEntity.ok().build();
     }

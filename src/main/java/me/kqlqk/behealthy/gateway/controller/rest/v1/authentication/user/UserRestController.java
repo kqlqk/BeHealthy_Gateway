@@ -3,17 +3,15 @@ package me.kqlqk.behealthy.gateway.controller.rest.v1.authentication.user;
 import com.fasterxml.jackson.annotation.JsonView;
 import me.kqlqk.behealthy.gateway.dto.authenticationService.ChangePasswordDTO;
 import me.kqlqk.behealthy.gateway.dto.authenticationService.UserAuthDTO;
-import me.kqlqk.behealthy.gateway.dto.kcalCounterService.KcalsInfoDTO;
-import me.kqlqk.behealthy.gateway.dto.kcalCounterService.UserConditionDTO;
 import me.kqlqk.behealthy.gateway.exception.exceptions.UserException;
 import me.kqlqk.behealthy.gateway.feign_client.AuthenticationClient;
-import me.kqlqk.behealthy.gateway.feign_client.KcalCounterClient;
 import me.kqlqk.behealthy.gateway.service.AuthenticationClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @RestController
@@ -44,7 +42,9 @@ public class UserRestController {
     }
 
     @PatchMapping("/users/{id}")
-    public void updatePasswordForCurrentUser(@PathVariable long id, @RequestBody @Valid ChangePasswordDTO changePasswordDTO) {
+    public ResponseEntity<?> updatePasswordForCurrentUser(@PathVariable long id,
+                                                          @RequestBody @Valid ChangePasswordDTO changePasswordDTO,
+                                                          HttpServletResponse response) {
         if (id != authenticationClientService.getUserFromContext().getId()) {
             throw new UserException("Id = " + id + " is not your, please, use id = " +
                     authenticationClientService.getUserFromContext().getId());
@@ -59,5 +59,11 @@ public class UserRestController {
         user.setPassword(passwordEncoder.encode(changePasswordDTO.getNewPassword()));
 
         authenticationClient.updateUser(id, user);
+
+        if (response.getStatus() != 200) {
+            return ResponseEntity.status(response.getStatus()).build();
+        }
+
+        return ResponseEntity.ok().build();
     }
 }
