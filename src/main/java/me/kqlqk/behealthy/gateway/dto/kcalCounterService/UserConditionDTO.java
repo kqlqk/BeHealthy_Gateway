@@ -1,11 +1,13 @@
 package me.kqlqk.behealthy.gateway.dto.kcalCounterService;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import lombok.Data;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 
+@Data
 public class UserConditionDTO {
     public interface WithoutUserIdView {
     }
@@ -40,68 +42,4 @@ public class UserConditionDTO {
     @Pattern(regexp = "LOSE|MAINTAIN|GAIN", message = "Please, use valid goal (LOSE or MAINTAIN or GAIN)")
     @JsonView(WithoutUserIdView.class)
     private String goal;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public byte getAge() {
-        return age;
-    }
-
-    public void setAge(byte age) {
-        this.age = age;
-    }
-
-    public short getHeight() {
-        return height;
-    }
-
-    public void setHeight(short height) {
-        this.height = height;
-    }
-
-    public short getWeight() {
-        return weight;
-    }
-
-    public void setWeight(short weight) {
-        this.weight = weight;
-    }
-
-    public String getIntensity() {
-        return intensity;
-    }
-
-    public void setIntensity(String intensity) {
-        this.intensity = intensity;
-    }
-
-    public String getGoal() {
-        return goal;
-    }
-
-    public void setGoal(String goal) {
-        this.goal = goal;
-    }
 }

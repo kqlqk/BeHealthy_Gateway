@@ -1,5 +1,6 @@
 package me.kqlqk.behealthy.gateway.service.impl;
 
+import lombok.NonNull;
 import me.kqlqk.behealthy.gateway.dto.authenticationService.UserAuthDTO;
 import me.kqlqk.behealthy.gateway.exception.exceptions.UserException;
 import me.kqlqk.behealthy.gateway.feign_client.AuthenticationClient;
@@ -24,11 +25,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        if (email == null || email.equals("")) {
-            throw new IllegalArgumentException("Email cannot be null");
-        }
-
+    public UserDetails loadUserByUsername(@NonNull String email) throws UsernameNotFoundException {
         for (UserAuthDTO userAuthDTO : authenticationClient.getAllUsers()) {
             if (userAuthDTO.getEmail().equals(email)) {
                 Set<GrantedAuthority> authorities = new HashSet<>();
