@@ -1,4 +1,4 @@
-package me.kqlqk.behealthy.gateway.controller.rest.v1.authentication.user;
+package me.kqlqk.behealthy.gateway.controller.rest.v1.user;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import me.kqlqk.behealthy.gateway.dto.authenticationService.ChangePasswordDTO;
