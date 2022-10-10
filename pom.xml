@@ -17,7 +17,7 @@
 
     <properties>
         <java.version>11</java.version>
-        <start-class>me.kqlqk.behealthy.gateway.BeHealthyGateway</start-class>
+        <start-class>me.kqlqk.behealthy.gateway.Gateway</start-class>
     </properties>
 
 

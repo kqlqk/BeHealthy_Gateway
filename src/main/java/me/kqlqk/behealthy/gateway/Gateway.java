@@ -9,14 +9,14 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
 @EnableFeignClients
-public class BeHealthyGateway extends SpringBootServletInitializer {
+public class Gateway extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
-        SpringApplication.run(BeHealthyGateway.class, args);
+        SpringApplication.run(Gateway.class, args);
     }
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-        return builder.sources(BeHealthyGateway.class);
+        return builder.sources(Gateway.class);
     }
 }
