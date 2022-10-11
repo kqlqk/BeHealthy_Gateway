@@ -16,7 +16,7 @@ public class UserConditionDTO {
     private long id;
     private long userId;
 
-    @Pattern(regexp = "MALE|FEMALE", message = "Please, use valid gender (MALE or FEMALE)")
+    @Pattern(regexp = "MALE|FEMALE", message = "Please use valid gender (MALE or FEMALE)")
     @JsonView(WithoutUserIdView.class)
     private String gender;
 
@@ -35,11 +35,11 @@ public class UserConditionDTO {
     @JsonView(WithoutUserIdView.class)
     private short weight;
 
-    @Pattern(regexp = "MIN|AVGG|MAX", message = "Please, use valid intensity (MIN or AVG or MAX)")
+    @Pattern(regexp = "MIN|AVGG|MAX", message = "Please use valid intensity (MIN or AVG or MAX)")
     @JsonView(WithoutUserIdView.class)
     private String intensity;
 
-    @Pattern(regexp = "LOSE|MAINTAIN|GAIN", message = "Please, use valid goal (LOSE or MAINTAIN or GAIN)")
+    @Pattern(regexp = "LOSE|MAINTAIN|GAIN", message = "Please use valid goal (LOSE or MAINTAIN or GAIN)")
     @JsonView(WithoutUserIdView.class)
     private String goal;
 }
