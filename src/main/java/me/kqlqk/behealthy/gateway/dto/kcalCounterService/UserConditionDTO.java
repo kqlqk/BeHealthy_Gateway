@@ -35,7 +35,7 @@ public class UserConditionDTO {
     @JsonView(WithoutUserIdView.class)
     private short weight;
 
-    @Pattern(regexp = "MIN|AVGG|MAX", message = "Please use valid intensity (MIN or AVG or MAX)")
+    @Pattern(regexp = "MIN|AVG|MAX", message = "Please use valid intensity (MIN or AVG or MAX)")
     @JsonView(WithoutUserIdView.class)
     private String intensity;
 
