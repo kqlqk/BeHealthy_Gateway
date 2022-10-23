@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-@FeignClient(name = "AuthenticationService")
+@FeignClient(name = "authenticationService")
 public interface AuthenticationClient {
 
     @GetMapping("/api/v1/users/{id}")

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(name = "KcalsCounterService")
+@FeignClient(name = "kcalsCounterService")
 public interface KcalsCounterClient {
     @GetMapping("/api/v1/condition")
     UserConditionDTO getUserConditionByUserId(@RequestParam long userId);
