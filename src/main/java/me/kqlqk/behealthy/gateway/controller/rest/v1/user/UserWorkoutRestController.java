@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -25,7 +26,7 @@ public class UserWorkoutRestController {
 
 
     @GetMapping("/workout")
-    @JsonView(WorkoutInfoDTO.WithoutUserIdAndWorkoutsPerWeekView.class)
+    @JsonView(WorkoutInfoDTO.WithoutUserIdView.class)
     public List<WorkoutInfoDTO> getWorkout(@PathVariable long id) {
         if (id != authenticationClientService.getUserFromContext().getId()) {
             throw new UserException("Id = " + id + " is not your, please, use id = " +
@@ -36,7 +37,7 @@ public class UserWorkoutRestController {
     }
 
     @PostMapping("/workout")
-    public ResponseEntity<?> createWorkout(@PathVariable long id, @RequestBody WorkoutInfoDTO workoutInfoDTO) {
+    public ResponseEntity<?> createWorkout(@PathVariable long id, @RequestBody @Valid WorkoutInfoDTO workoutInfoDTO) {
         if (id != authenticationClientService.getUserFromContext().getId()) {
             throw new UserException("Id = " + id + " is not your, please, use id = " +
                     authenticationClientService.getUserFromContext().getId());

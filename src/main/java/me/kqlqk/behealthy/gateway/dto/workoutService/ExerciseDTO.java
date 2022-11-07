@@ -9,15 +9,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ExerciseDTO {
-    @JsonView(WorkoutInfoDTO.WithoutUserIdAndWorkoutsPerWeekView.class)
+    @JsonView(WorkoutInfoDTO.WithoutUserIdView.class)
     private int id;
 
-    @JsonView(WorkoutInfoDTO.WithoutUserIdAndWorkoutsPerWeekView.class)
+    @JsonView(WorkoutInfoDTO.WithoutUserIdView.class)
     private String name;
 
-    @JsonView(WorkoutInfoDTO.WithoutUserIdAndWorkoutsPerWeekView.class)
+    @JsonView(WorkoutInfoDTO.WithoutUserIdView.class)
     private String description;
 
-    @JsonView(WorkoutInfoDTO.WithoutUserIdAndWorkoutsPerWeekView.class)
+    @JsonView(WorkoutInfoDTO.WithoutUserIdView.class)
     private String muscleGroup;
 }

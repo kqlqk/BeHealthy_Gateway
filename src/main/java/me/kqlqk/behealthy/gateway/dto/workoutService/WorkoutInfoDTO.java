@@ -5,26 +5,30 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Pattern;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class WorkoutInfoDTO {
-    public interface WithoutUserIdAndWorkoutsPerWeekView {
+    public interface WithoutUserIdView {
     }
 
-    @JsonView(WithoutUserIdAndWorkoutsPerWeekView.class)
+    @JsonView(WithoutUserIdView.class)
     private long id;
 
     private long userId;
 
-    @JsonView(WithoutUserIdAndWorkoutsPerWeekView.class)
+    @JsonView(WithoutUserIdView.class)
     private int workoutDay;
 
-    @JsonView(WithoutUserIdAndWorkoutsPerWeekView.class)
+    @JsonView(WithoutUserIdView.class)
     private int numberPerDay;
 
-    @JsonView(WithoutUserIdAndWorkoutsPerWeekView.class)
+    @JsonView(WithoutUserIdView.class)
     private ExerciseDTO exercise;
 
+    @Pattern(regexp = "TWO|THREE|FOUR", message = "Please use valid data (TWO or THREE or FOUR)")
+    @JsonView(WithoutUserIdView.class)
     private String workoutsPerWeek;
 }
