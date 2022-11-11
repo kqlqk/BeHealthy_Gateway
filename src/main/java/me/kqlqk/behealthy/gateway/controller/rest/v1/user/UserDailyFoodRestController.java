@@ -3,7 +3,7 @@ package me.kqlqk.behealthy.gateway.controller.rest.v1.user;
 import com.fasterxml.jackson.annotation.JsonView;
 import me.kqlqk.behealthy.gateway.dto.kcalCounterService.DailyFoodDTO;
 import me.kqlqk.behealthy.gateway.exception.exceptions.UserException;
-import me.kqlqk.behealthy.gateway.feign_client.KcalsCounterClient;
+import me.kqlqk.behealthy.gateway.feign_client.ConditionClient;
 import me.kqlqk.behealthy.gateway.service.AuthenticationClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,13 +16,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/users/{id}")
 public class UserDailyFoodRestController {
-    private final KcalsCounterClient kcalsCounterClient;
+    private final ConditionClient conditionClient;
     private final AuthenticationClientService authenticationClientService;
 
     @Autowired
-    public UserDailyFoodRestController(KcalsCounterClient kcalsCounterClient,
+    public UserDailyFoodRestController(ConditionClient conditionClient,
                                        AuthenticationClientService authenticationClientService) {
-        this.kcalsCounterClient = kcalsCounterClient;
+        this.conditionClient = conditionClient;
         this.authenticationClientService = authenticationClientService;
     }
 
@@ -34,7 +34,7 @@ public class UserDailyFoodRestController {
                     authenticationClientService.getUserFromContext().getId());
         }
 
-        return kcalsCounterClient.getDailyFoodsForUser(id);
+        return conditionClient.getDailyFoodsForUser(id);
     }
 
     @PostMapping("/daily_food")
@@ -47,7 +47,7 @@ public class UserDailyFoodRestController {
         }
 
         dailyFoodDTO.setUserId(id);
-        kcalsCounterClient.addDailyFoodForUser(dailyFoodDTO);
+        conditionClient.addDailyFoodForUser(dailyFoodDTO);
 
         if (response.getStatus() != 200) {
             return ResponseEntity.status(response.getStatus()).build();
@@ -65,12 +65,12 @@ public class UserDailyFoodRestController {
                     authenticationClientService.getUserFromContext().getId());
         }
 
-        kcalsCounterClient.getDailyFoodsForUser(id)
+        conditionClient.getDailyFoodsForUser(id)
                 .stream()
                 .filter(product -> product.getId() == productId)
                 .findAny()
                 .orElseThrow(() -> new UserException("Daily food with id = " + productId + " not found for user with userId = " + id));
-        kcalsCounterClient.deleteDailyFoodFromUser(productId);
+        conditionClient.deleteDailyFoodFromUser(productId);
 
         if (response.getStatus() != 200) {
             return ResponseEntity.status(response.getStatus()).build();

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import me.kqlqk.behealthy.gateway.dto.kcalCounterService.KcalsInfoDTO;
 import me.kqlqk.behealthy.gateway.dto.kcalCounterService.UserConditionDTO;
 import me.kqlqk.behealthy.gateway.exception.exceptions.UserException;
-import me.kqlqk.behealthy.gateway.feign_client.KcalsCounterClient;
+import me.kqlqk.behealthy.gateway.feign_client.ConditionClient;
 import me.kqlqk.behealthy.gateway.service.AuthenticationClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +17,13 @@ import javax.validation.Valid;
 @RequestMapping("/api/v1/users/{id}")
 public class UserConditionRestController {
     private final AuthenticationClientService authenticationClientService;
-    private final KcalsCounterClient kcalsCounterClient;
+    private final ConditionClient conditionClient;
 
     @Autowired
     public UserConditionRestController(AuthenticationClientService authenticationClientService,
-                                       KcalsCounterClient kcalsCounterClient) {
+                                       ConditionClient conditionClient) {
         this.authenticationClientService = authenticationClientService;
-        this.kcalsCounterClient = kcalsCounterClient;
+        this.conditionClient = conditionClient;
     }
 
     @GetMapping("/condition")
@@ -34,7 +34,7 @@ public class UserConditionRestController {
                     authenticationClientService.getUserFromContext().getId());
         }
 
-        return kcalsCounterClient.getUserConditionByUserId(id);
+        return conditionClient.getUserConditionByUserId(id);
     }
 
     @PutMapping("/condition")
@@ -46,7 +46,7 @@ public class UserConditionRestController {
                     authenticationClientService.getUserFromContext().getId());
         }
 
-        kcalsCounterClient.updateUserCondition(id, userConditionDTO);
+        conditionClient.updateUserCondition(id, userConditionDTO);
 
         if (response.getStatus() != 200) {
             return ResponseEntity.status(response.getStatus()).build();
@@ -65,7 +65,7 @@ public class UserConditionRestController {
         }
 
         userConditionDTO.setUserId(id);
-        kcalsCounterClient.createUserCondition(userConditionDTO);
+        conditionClient.createUserCondition(userConditionDTO);
 
         if (response.getStatus() != 200) {
             return ResponseEntity.status(response.getStatus()).build();
@@ -81,6 +81,6 @@ public class UserConditionRestController {
                     authenticationClientService.getUserFromContext().getId());
         }
 
-        return kcalsCounterClient.getKcalsInfoByUserId(id);
+        return conditionClient.getKcalsInfoByUserId(id);
     }
 }
