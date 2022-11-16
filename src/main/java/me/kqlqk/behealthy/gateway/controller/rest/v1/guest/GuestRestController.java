@@ -6,7 +6,6 @@ import me.kqlqk.behealthy.gateway.exception.exceptions.UserException;
 import me.kqlqk.behealthy.gateway.feign_client.AuthenticationClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,18 +19,14 @@ import java.util.Map;
 @RequestMapping("/api/v1")
 public class GuestRestController {
     private final AuthenticationClient authenticationClient;
-    private final PasswordEncoder encoder;
 
     @Autowired
-    public GuestRestController(AuthenticationClient authenticationClient, PasswordEncoder encoder) {
+    public GuestRestController(AuthenticationClient authenticationClient) {
         this.authenticationClient = authenticationClient;
-        this.encoder = encoder;
     }
 
     @PostMapping("/registration")
     public ResponseEntity<?> createUser(@RequestBody @Valid UserAuthDTO userAuthDTO, HttpServletResponse response) {
-        userAuthDTO.setPassword(encoder.encode(userAuthDTO.getPassword()));
-
         authenticationClient.createUser(userAuthDTO);
 
         String access = authenticationClient.getNewAccessToken(authenticationClient.getUserByEmail(userAuthDTO.getEmail()).getId()).get("access");
@@ -57,7 +52,7 @@ public class GuestRestController {
             throw new UserException("Bad credentials");
         }
 
-        if (!encoder.matches(loginDTO.getPassword(), savedUser.getPassword())) {
+        if (!authenticationClient.checkPassword(savedUser.getId(), loginDTO.getPassword()).isValid()) {
             throw new UserException("Bad credentials");
         }
 

@@ -19,7 +19,6 @@ import javax.validation.Valid;
 public class UserRestController {
     private final AuthenticationClient authenticationClient;
     private final AuthenticationClientService authenticationClientService;
-    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public UserRestController(AuthenticationClient authenticationClient,
@@ -27,7 +26,6 @@ public class UserRestController {
                               PasswordEncoder passwordEncoder) {
         this.authenticationClient = authenticationClient;
         this.authenticationClientService = authenticationClientService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/users/{id}")
@@ -41,7 +39,7 @@ public class UserRestController {
         return authenticationClient.getUserById(id);
     }
 
-    @PatchMapping("/users/{id}")
+    @PutMapping("/users/{id}")
     public ResponseEntity<?> updatePasswordForCurrentUser(@PathVariable long id,
                                                           @RequestBody @Valid ChangePasswordDTO changePasswordDTO,
                                                           HttpServletResponse response) {
@@ -52,11 +50,11 @@ public class UserRestController {
 
         UserAuthDTO user = authenticationClient.getUserById(id);
 
-        if (!passwordEncoder.matches(changePasswordDTO.getOldPassword(), authenticationClient.getUserById(id).getPassword())) {
+        if (!authenticationClient.checkPassword(id, changePasswordDTO.getOldPassword()).isValid()) {
             throw new UserException("Old password isn't correct");
         }
 
-        user.setPassword(passwordEncoder.encode(changePasswordDTO.getNewPassword()));
+        user.setPassword(changePasswordDTO.getNewPassword());
 
         authenticationClient.updateUser(id, user);
 

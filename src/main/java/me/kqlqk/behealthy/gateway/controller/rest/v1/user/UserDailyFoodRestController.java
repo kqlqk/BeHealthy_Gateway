@@ -1,6 +1,5 @@
 package me.kqlqk.behealthy.gateway.controller.rest.v1.user;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import me.kqlqk.behealthy.gateway.dto.kcalCounterService.DailyFoodDTO;
 import me.kqlqk.behealthy.gateway.exception.exceptions.UserException;
 import me.kqlqk.behealthy.gateway.feign_client.ConditionClient;
@@ -26,8 +25,7 @@ public class UserDailyFoodRestController {
         this.authenticationClientService = authenticationClientService;
     }
 
-    @GetMapping("/daily_food")
-    @JsonView(DailyFoodDTO.WithoutUserIdView.class)
+    @GetMapping("/food")
     public List<DailyFoodDTO> getDailyFoodsForUser(@PathVariable long id) {
         if (id != authenticationClientService.getUserFromContext().getId()) {
             throw new UserException("Id = " + id + " is not your, please, use id = " +
@@ -37,7 +35,7 @@ public class UserDailyFoodRestController {
         return conditionClient.getDailyFoodsForUser(id);
     }
 
-    @PostMapping("/daily_food")
+    @PostMapping("/food")
     public ResponseEntity<?> addDailyFoodsForUser(@PathVariable long id,
                                                   @RequestBody @Valid DailyFoodDTO dailyFoodDTO,
                                                   HttpServletResponse response) {
@@ -46,8 +44,7 @@ public class UserDailyFoodRestController {
                     authenticationClientService.getUserFromContext().getId());
         }
 
-        dailyFoodDTO.setUserId(id);
-        conditionClient.addDailyFoodForUser(dailyFoodDTO);
+        conditionClient.addDailyFoodForUser(id, dailyFoodDTO);
 
         if (response.getStatus() != 200) {
             return ResponseEntity.status(response.getStatus()).build();
@@ -56,7 +53,7 @@ public class UserDailyFoodRestController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/daily_food")
+    @DeleteMapping("/food")
     public ResponseEntity<?> deleteDailyFoodsForUser(@PathVariable long id,
                                                      @RequestParam long productId,
                                                      HttpServletResponse response) {

@@ -43,8 +43,7 @@ public class UserWorkoutRestController {
                     authenticationClientService.getUserFromContext().getId());
         }
 
-        workoutInfoDTO.setUserId(id);
-        workoutClient.createWorkout(workoutInfoDTO);
+        workoutClient.createWorkout(id, workoutInfoDTO);
 
         return ResponseEntity.ok().build();
     }
@@ -56,8 +55,7 @@ public class UserWorkoutRestController {
                     authenticationClientService.getUserFromContext().getId());
         }
 
-        workoutInfoDTO.setUserId(id);
-        workoutClient.updateWorkout(workoutInfoDTO);
+        workoutClient.updateWorkout(id, workoutInfoDTO);
 
         return ResponseEntity.ok().build();
     }
