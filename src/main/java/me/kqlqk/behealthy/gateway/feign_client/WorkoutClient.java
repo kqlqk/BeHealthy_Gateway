@@ -10,11 +10,11 @@ import java.util.List;
 public interface WorkoutClient {
 
     @GetMapping("/api/v1/workout")
-    List<WorkoutInfoDTO> getWorkout(@RequestParam("userId") long userId);
+    List<WorkoutInfoDTO> getWorkout(@RequestParam long userId);
 
     @PostMapping("/api/v1/workout")
-    void createWorkout(@RequestBody WorkoutInfoDTO workoutInfoDTO);
+    void createWorkout(@RequestParam long userId, @RequestBody WorkoutInfoDTO workoutInfoDTO);
 
     @PutMapping("/api/v1/workout")
-    void updateWorkout(@RequestBody WorkoutInfoDTO workoutInfoDTO);
+    void updateWorkout(@RequestParam long userId, @RequestBody WorkoutInfoDTO workoutInfoDTO);
 }

@@ -23,27 +23,27 @@ public interface AuthenticationClient {
     @PostMapping("/api/v1/users")
     void createUser(@RequestBody UserAuthDTO userAuthDTO);
 
-    @PostMapping("/api/v1/users/{id}")
+    @PutMapping("/api/v1/users/{id}")
     void updateUser(@PathVariable long id, @RequestBody UserAuthDTO userAuthDTO);
 
-    @GetMapping("/api/v1/auth/validate_access_token")
+    @PostMapping("/api/v1/users/{id}/password/check")
+    ValidateDTO checkPassword(@PathVariable long id, String decodedPassword);
+
+    @GetMapping("/api/v1/auth/validate/access")
     ValidateDTO validateAccessTokenFromRequest(@RequestHeader("Authorization_access") String accessToken);
 
-    @GetMapping("/api/v1/auth/validate_refresh_token")
+    @GetMapping("/api/v1/auth/validate/refresh")
     ValidateDTO validateRefreshTokenFromRequest(@RequestHeader("Authorization_refresh") String refreshToken);
 
-    @GetMapping("/api/v1/users/{id}/update_tokens")
+    @PutMapping("/api/v1/users/{id}/tokens")
     Map<String, String> updateTokensForUser(@PathVariable long id);
 
-    @GetMapping("/api/v1/auth/get_email_from_access_token")
-    Map<String, String> getEmailFromAccessToken(@RequestHeader("Authorization_access") String accessToken);
-
-    @GetMapping("/api/v1/auth/get_email_from_refresh_token")
+    @GetMapping("/api/v1/auth/request/refresh/email")
     Map<String, String> getEmailFromRefreshToken(@RequestHeader("Authorization_refresh") String refreshToken);
 
-    @GetMapping("/api/v1/users/{id}/new_access_token")
+    @PutMapping("/api/v1/users/{id}/access")
     Map<String, String> getNewAccessToken(@PathVariable long id);
 
-    @GetMapping("/api/v1/users/{id}/new_refresh_token")
+    @PutMapping("/api/v1/users/{id}/refresh")
     Map<String, String> getNewRefreshToken(@PathVariable long id);
 }
