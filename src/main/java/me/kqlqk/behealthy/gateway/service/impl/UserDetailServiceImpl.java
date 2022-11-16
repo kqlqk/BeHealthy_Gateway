@@ -2,7 +2,7 @@ package me.kqlqk.behealthy.gateway.service.impl;
 
 import lombok.NonNull;
 import me.kqlqk.behealthy.gateway.dto.authenticationService.UserAuthDTO;
-import me.kqlqk.behealthy.gateway.exception.exceptions.UserException;
+import me.kqlqk.behealthy.gateway.exception.exceptions.authenticationService.UserNotFoundException;
 import me.kqlqk.behealthy.gateway.feign_client.AuthenticationClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -35,6 +35,6 @@ public class UserDetailServiceImpl implements UserDetailsService {
             }
         }
 
-        throw new UserException("User with email = " + email + " not found");
+        throw new UserNotFoundException("User with email = " + email + " not found");
     }
 }

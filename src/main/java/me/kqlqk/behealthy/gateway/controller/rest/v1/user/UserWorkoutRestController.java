@@ -2,7 +2,7 @@ package me.kqlqk.behealthy.gateway.controller.rest.v1.user;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import me.kqlqk.behealthy.gateway.dto.workoutService.WorkoutInfoDTO;
-import me.kqlqk.behealthy.gateway.exception.exceptions.UserException;
+import me.kqlqk.behealthy.gateway.exception.exceptions.authenticationService.UserException;
 import me.kqlqk.behealthy.gateway.feign_client.WorkoutClient;
 import me.kqlqk.behealthy.gateway.service.AuthenticationClientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +43,7 @@ public class UserWorkoutRestController {
                     authenticationClientService.getUserFromContext().getId());
         }
 
-        workoutInfoDTO.setUserId(id);
-        workoutClient.createWorkout(workoutInfoDTO);
+        workoutClient.createWorkout(id, workoutInfoDTO);
 
         return ResponseEntity.ok().build();
     }
@@ -56,8 +55,7 @@ public class UserWorkoutRestController {
                     authenticationClientService.getUserFromContext().getId());
         }
 
-        workoutInfoDTO.setUserId(id);
-        workoutClient.updateWorkout(workoutInfoDTO);
+        workoutClient.updateWorkout(id, workoutInfoDTO);
 
         return ResponseEntity.ok().build();
     }

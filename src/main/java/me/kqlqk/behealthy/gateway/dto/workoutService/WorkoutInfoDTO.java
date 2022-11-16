@@ -5,7 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 @Data
 @AllArgsConstructor
@@ -28,7 +29,8 @@ public class WorkoutInfoDTO {
     @JsonView(WithoutUserIdView.class)
     private ExerciseDTO exercise;
 
-    @Pattern(regexp = "TWO|THREE|FOUR", message = "Please use valid data (TWO or THREE or FOUR)")
+    @Min(value = 2, message = "workoutsPerWeek should be valid (2 or 3 or 4)")
+    @Max(value = 4, message = "workoutsPerWeek should be valid (2 or 3 or 4)")
     @JsonView(WithoutUserIdView.class)
-    private String workoutsPerWeek;
+    private int workoutsPerWeek;
 }

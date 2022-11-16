@@ -1,9 +1,8 @@
 package me.kqlqk.behealthy.gateway.controller.rest.v1.user;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import me.kqlqk.behealthy.gateway.dto.kcalCounterService.KcalsInfoDTO;
 import me.kqlqk.behealthy.gateway.dto.kcalCounterService.UserConditionDTO;
-import me.kqlqk.behealthy.gateway.exception.exceptions.UserException;
+import me.kqlqk.behealthy.gateway.exception.exceptions.authenticationService.UserException;
 import me.kqlqk.behealthy.gateway.feign_client.ConditionClient;
 import me.kqlqk.behealthy.gateway.service.AuthenticationClientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,6 @@ public class UserConditionRestController {
     }
 
     @GetMapping("/condition")
-    @JsonView(UserConditionDTO.WithoutUserIdView.class)
     public UserConditionDTO getCurrentUserCondition(@PathVariable long id) {
         if (id != authenticationClientService.getUserFromContext().getId()) {
             throw new UserException("Id = " + id + " is not your, please, use id = " +
@@ -64,8 +62,7 @@ public class UserConditionRestController {
                     authenticationClientService.getUserFromContext().getId());
         }
 
-        userConditionDTO.setUserId(id);
-        conditionClient.createUserCondition(userConditionDTO);
+        conditionClient.createUserCondition(id, userConditionDTO);
 
         if (response.getStatus() != 200) {
             return ResponseEntity.status(response.getStatus()).build();

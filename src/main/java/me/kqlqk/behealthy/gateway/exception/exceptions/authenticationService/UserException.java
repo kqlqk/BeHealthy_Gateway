@@ -1,4 +1,4 @@
-package me.kqlqk.behealthy.gateway.exception.exceptions;
+package me.kqlqk.behealthy.gateway.exception.exceptions.authenticationService;
 
 public class UserException extends RuntimeException {
     public UserException(String message) {

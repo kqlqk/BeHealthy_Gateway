@@ -3,7 +3,7 @@ package me.kqlqk.behealthy.gateway.cfg.filters;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.kqlqk.behealthy.gateway.dto.ExceptionDTO;
 import me.kqlqk.behealthy.gateway.dto.authenticationService.UserAuthDTO;
-import me.kqlqk.behealthy.gateway.exception.exceptions.TokenException;
+import me.kqlqk.behealthy.gateway.exception.exceptions.authenticationService.TokenException;
 import me.kqlqk.behealthy.gateway.feign_client.AuthenticationClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
