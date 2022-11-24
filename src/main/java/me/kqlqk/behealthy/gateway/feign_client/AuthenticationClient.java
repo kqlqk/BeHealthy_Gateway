@@ -6,7 +6,6 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @FeignClient(name = "authenticationService")
 public interface AuthenticationClient {
@@ -28,22 +27,4 @@ public interface AuthenticationClient {
 
     @PostMapping("/api/v1/users/{id}/password/check")
     ValidateDTO checkPassword(@PathVariable long id, String decodedPassword);
-
-    @GetMapping("/api/v1/auth/validate/access")
-    ValidateDTO validateAccessTokenFromRequest(@RequestHeader("Authorization_access") String accessToken);
-
-    @GetMapping("/api/v1/auth/validate/refresh")
-    ValidateDTO validateRefreshTokenFromRequest(@RequestHeader("Authorization_refresh") String refreshToken);
-
-    @PutMapping("/api/v1/users/{id}/tokens")
-    Map<String, String> updateTokensForUser(@PathVariable long id);
-
-    @GetMapping("/api/v1/auth/request/refresh/email")
-    Map<String, String> getEmailFromRefreshToken(@RequestHeader("Authorization_refresh") String refreshToken);
-
-    @PutMapping("/api/v1/users/{id}/access")
-    Map<String, String> getNewAccessToken(@PathVariable long id);
-
-    @PutMapping("/api/v1/users/{id}/refresh")
-    Map<String, String> getNewRefreshToken(@PathVariable long id);
 }

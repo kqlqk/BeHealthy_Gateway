@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Response;
 import feign.codec.ErrorDecoder;
 import me.kqlqk.behealthy.gateway.exception.exceptions.IsOnDevelopingException;
-import me.kqlqk.behealthy.gateway.exception.exceptions.authenticationService.TokenException;
 import me.kqlqk.behealthy.gateway.exception.exceptions.authenticationService.UserAlreadyExistsException;
 import me.kqlqk.behealthy.gateway.exception.exceptions.authenticationService.UserNotFoundException;
 import me.kqlqk.behealthy.gateway.exception.exceptions.conditionService.UserConditionAlreadyExistsException;
@@ -44,8 +43,6 @@ public class CustomErrorDecoder implements ErrorDecoder {
             throw new UserConditionAlreadyExistsException(getErrorMessageWithoutPrefix(errorMessage, "UserConditionAlreadyExists"));
         } else if (errorMessage.startsWith("UserConditionNotFound")) {
             throw new UserConditionNotFoundException(getErrorMessageWithoutPrefix(errorMessage, "UserConditionNotFound"));
-        } else if (errorMessage.startsWith("Token")) {
-            throw new TokenException(getErrorMessageWithoutPrefix(errorMessage, "Token"));
         } else if (errorMessage.startsWith("UserAlreadyExists")) {
             throw new UserAlreadyExistsException(getErrorMessageWithoutPrefix(errorMessage, "UserAlreadyExists"));
         } else if (errorMessage.startsWith("UserNotFound")) {

@@ -5,7 +5,6 @@ import me.kqlqk.behealthy.gateway.dto.authenticationService.ChangePasswordDTO;
 import me.kqlqk.behealthy.gateway.dto.authenticationService.UserAuthDTO;
 import me.kqlqk.behealthy.gateway.exception.exceptions.authenticationService.UserException;
 import me.kqlqk.behealthy.gateway.feign_client.AuthenticationClient;
-import me.kqlqk.behealthy.gateway.service.AuthenticationClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,23 +16,15 @@ import javax.validation.Valid;
 @RequestMapping("/api/v1")
 public class UserRestController {
     private final AuthenticationClient authenticationClient;
-    private final AuthenticationClientService authenticationClientService;
 
     @Autowired
-    public UserRestController(AuthenticationClient authenticationClient,
-                              AuthenticationClientService authenticationClientService) {
+    public UserRestController(AuthenticationClient authenticationClient) {
         this.authenticationClient = authenticationClient;
-        this.authenticationClientService = authenticationClientService;
     }
 
     @GetMapping("/users/{id}")
     @JsonView(UserAuthDTO.WithoutPasswordView.class)
     public UserAuthDTO getCurrentUser(@PathVariable long id) {
-        if (id != authenticationClientService.getUserFromContext().getId()) {
-            throw new UserException("Id = " + id + " is not your, please, use id = " +
-                    authenticationClientService.getUserFromContext().getId());
-        }
-
         return authenticationClient.getUserById(id);
     }
 
@@ -41,11 +32,6 @@ public class UserRestController {
     public ResponseEntity<?> updatePasswordForCurrentUser(@PathVariable long id,
                                                           @RequestBody @Valid ChangePasswordDTO changePasswordDTO,
                                                           HttpServletResponse response) {
-        if (id != authenticationClientService.getUserFromContext().getId()) {
-            throw new UserException("Id = " + id + " is not your, please, use id = " +
-                    authenticationClientService.getUserFromContext().getId());
-        }
-
         UserAuthDTO user = authenticationClient.getUserById(id);
 
         if (!authenticationClient.checkPassword(id, changePasswordDTO.getOldPassword()).isValid()) {
@@ -62,4 +48,5 @@ public class UserRestController {
 
         return ResponseEntity.ok().build();
     }
+
 }

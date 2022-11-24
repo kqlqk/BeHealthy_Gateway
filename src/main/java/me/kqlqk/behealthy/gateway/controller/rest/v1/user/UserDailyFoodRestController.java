@@ -3,7 +3,6 @@ package me.kqlqk.behealthy.gateway.controller.rest.v1.user;
 import me.kqlqk.behealthy.gateway.dto.kcalCounterService.DailyFoodDTO;
 import me.kqlqk.behealthy.gateway.exception.exceptions.authenticationService.UserException;
 import me.kqlqk.behealthy.gateway.feign_client.ConditionClient;
-import me.kqlqk.behealthy.gateway.service.AuthenticationClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,22 +15,14 @@ import java.util.List;
 @RequestMapping("/api/v1/users/{id}")
 public class UserDailyFoodRestController {
     private final ConditionClient conditionClient;
-    private final AuthenticationClientService authenticationClientService;
 
     @Autowired
-    public UserDailyFoodRestController(ConditionClient conditionClient,
-                                       AuthenticationClientService authenticationClientService) {
+    public UserDailyFoodRestController(ConditionClient conditionClient) {
         this.conditionClient = conditionClient;
-        this.authenticationClientService = authenticationClientService;
     }
 
     @GetMapping("/food")
     public List<DailyFoodDTO> getDailyFoodsForUser(@PathVariable long id) {
-        if (id != authenticationClientService.getUserFromContext().getId()) {
-            throw new UserException("Id = " + id + " is not your, please, use id = " +
-                    authenticationClientService.getUserFromContext().getId());
-        }
-
         return conditionClient.getDailyFoodsForUser(id);
     }
 
@@ -39,11 +30,6 @@ public class UserDailyFoodRestController {
     public ResponseEntity<?> addDailyFoodsForUser(@PathVariable long id,
                                                   @RequestBody @Valid DailyFoodDTO dailyFoodDTO,
                                                   HttpServletResponse response) {
-        if (id != authenticationClientService.getUserFromContext().getId()) {
-            throw new UserException("Id = " + id + " is not your, please, use id = " +
-                    authenticationClientService.getUserFromContext().getId());
-        }
-
         conditionClient.addDailyFoodForUser(id, dailyFoodDTO);
 
         if (response.getStatus() != 200) {
@@ -57,11 +43,6 @@ public class UserDailyFoodRestController {
     public ResponseEntity<?> deleteDailyFoodsForUser(@PathVariable long id,
                                                      @RequestParam long productId,
                                                      HttpServletResponse response) {
-        if (id != authenticationClientService.getUserFromContext().getId()) {
-            throw new UserException("Id = " + id + " is not your, please, use id = " +
-                    authenticationClientService.getUserFromContext().getId());
-        }
-
         conditionClient.getDailyFoodsForUser(id)
                 .stream()
                 .filter(product -> product.getId() == productId)
