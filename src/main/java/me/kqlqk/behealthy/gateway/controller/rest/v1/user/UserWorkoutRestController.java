@@ -1,6 +1,7 @@
 package me.kqlqk.behealthy.gateway.controller.rest.v1.user;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import me.kqlqk.behealthy.gateway.aop.CheckUserId;
 import me.kqlqk.behealthy.gateway.dto.workoutService.WorkoutInfoDTO;
 import me.kqlqk.behealthy.gateway.feign_client.WorkoutClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +22,14 @@ public class UserWorkoutRestController {
     }
 
 
+    @CheckUserId
     @GetMapping("/workout")
     @JsonView(WorkoutInfoDTO.WithoutUserIdView.class)
     public List<WorkoutInfoDTO> getWorkout(@PathVariable long id) {
         return workoutClient.getWorkout(id);
     }
 
+    @CheckUserId
     @PostMapping("/workout")
     public ResponseEntity<?> createWorkout(@PathVariable long id, @RequestBody @Valid WorkoutInfoDTO workoutInfoDTO) {
         workoutClient.createWorkout(id, workoutInfoDTO);
@@ -34,6 +37,7 @@ public class UserWorkoutRestController {
         return ResponseEntity.ok().build();
     }
 
+    @CheckUserId
     @PutMapping("/workout")
     public ResponseEntity<?> updateWorkout(@PathVariable long id, @RequestBody WorkoutInfoDTO workoutInfoDTO) {
         workoutClient.updateWorkout(id, workoutInfoDTO);

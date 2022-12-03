@@ -4,8 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Response;
 import feign.codec.ErrorDecoder;
 import me.kqlqk.behealthy.gateway.exception.exceptions.IsOnDevelopingException;
-import me.kqlqk.behealthy.gateway.exception.exceptions.authenticationService.UserAlreadyExistsException;
-import me.kqlqk.behealthy.gateway.exception.exceptions.authenticationService.UserNotFoundException;
+import me.kqlqk.behealthy.gateway.exception.exceptions.authenticationService.*;
 import me.kqlqk.behealthy.gateway.exception.exceptions.conditionService.UserConditionAlreadyExistsException;
 import me.kqlqk.behealthy.gateway.exception.exceptions.conditionService.UserConditionNotFoundException;
 import me.kqlqk.behealthy.gateway.exception.exceptions.workoutService.WorkoutNotFoundException;
@@ -29,7 +28,7 @@ public class CustomErrorDecoder implements ErrorDecoder {
             throw new RuntimeException(e);
         }
 
-        String errorMessage = info.get("info") != null ? info.get("info") : "No details";
+        String errorMessage = info.get("info") != null ? info.get("info") : "No details about exception";
 
         if (response.status() == 404) {
             return new RuntimeException(errorMessage);
@@ -47,6 +46,12 @@ public class CustomErrorDecoder implements ErrorDecoder {
             throw new UserAlreadyExistsException(getErrorMessageWithoutPrefix(errorMessage, "UserAlreadyExists"));
         } else if (errorMessage.startsWith("UserNotFound")) {
             throw new UserNotFoundException(getErrorMessageWithoutPrefix(errorMessage, "UserNotFound"));
+        } else if (errorMessage.startsWith("Token")) {
+            throw new TokenException(getErrorMessageWithoutPrefix(errorMessage, "Token"));
+        } else if (errorMessage.startsWith("TokenAlreadyExistsException")) {
+            throw new TokenAlreadyExistsException(getErrorMessageWithoutPrefix(errorMessage, "TokenAlreadyExistsException"));
+        } else if (errorMessage.startsWith("TokenNotFound")) {
+            throw new TokenNotFoundException(getErrorMessageWithoutPrefix(errorMessage, "TokenNotFound"));
         } else {
             throw new RuntimeException(errorMessage);
         }

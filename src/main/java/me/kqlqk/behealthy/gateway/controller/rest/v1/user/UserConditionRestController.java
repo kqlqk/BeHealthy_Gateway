@@ -1,5 +1,6 @@
 package me.kqlqk.behealthy.gateway.controller.rest.v1.user;
 
+import me.kqlqk.behealthy.gateway.aop.CheckUserId;
 import me.kqlqk.behealthy.gateway.dto.kcalCounterService.KcalsInfoDTO;
 import me.kqlqk.behealthy.gateway.dto.kcalCounterService.UserConditionDTO;
 import me.kqlqk.behealthy.gateway.feign_client.ConditionClient;
@@ -20,11 +21,13 @@ public class UserConditionRestController {
         this.conditionClient = conditionClient;
     }
 
+    @CheckUserId
     @GetMapping("/condition")
     public UserConditionDTO getCurrentUserCondition(@PathVariable long id) {
         return conditionClient.getUserConditionByUserId(id);
     }
 
+    @CheckUserId
     @PutMapping("/condition")
     public ResponseEntity<?> updateUserCondition(@PathVariable long id,
                                                  @RequestBody @Valid UserConditionDTO userConditionDTO,
@@ -38,6 +41,7 @@ public class UserConditionRestController {
         return ResponseEntity.ok().build();
     }
 
+    @CheckUserId
     @PostMapping("/condition")
     public ResponseEntity<?> createUserCondition(@PathVariable long id,
                                                  @RequestBody @Valid UserConditionDTO userConditionDTO,
@@ -51,6 +55,7 @@ public class UserConditionRestController {
         return ResponseEntity.ok().build();
     }
 
+    @CheckUserId
     @GetMapping("/kcals")
     public KcalsInfoDTO getCurrentUserKcalsInfo(@PathVariable long id) {
         return conditionClient.getKcalsInfoByUserId(id);

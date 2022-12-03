@@ -1,8 +1,9 @@
 package me.kqlqk.behealthy.gateway.controller.rest.v1.user;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import me.kqlqk.behealthy.gateway.aop.CheckUserId;
 import me.kqlqk.behealthy.gateway.dto.authenticationService.ChangePasswordDTO;
-import me.kqlqk.behealthy.gateway.dto.authenticationService.UserAuthDTO;
+import me.kqlqk.behealthy.gateway.dto.authenticationService.UserDTO;
 import me.kqlqk.behealthy.gateway.exception.exceptions.authenticationService.UserException;
 import me.kqlqk.behealthy.gateway.feign_client.AuthenticationClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,17 +23,19 @@ public class UserRestController {
         this.authenticationClient = authenticationClient;
     }
 
+    @CheckUserId
     @GetMapping("/users/{id}")
-    @JsonView(UserAuthDTO.WithoutPasswordView.class)
-    public UserAuthDTO getCurrentUser(@PathVariable long id) {
+    @JsonView(UserDTO.WithoutPasswordView.class)
+    public UserDTO getCurrentUser(@PathVariable long id) {
         return authenticationClient.getUserById(id);
     }
 
+    @CheckUserId
     @PutMapping("/users/{id}")
     public ResponseEntity<?> updatePasswordForCurrentUser(@PathVariable long id,
                                                           @RequestBody @Valid ChangePasswordDTO changePasswordDTO,
                                                           HttpServletResponse response) {
-        UserAuthDTO user = authenticationClient.getUserById(id);
+        UserDTO user = authenticationClient.getUserById(id);
 
         if (!authenticationClient.checkPassword(id, changePasswordDTO.getOldPassword()).isValid()) {
             throw new UserException("Old password isn't correct");

@@ -1,5 +1,6 @@
 package me.kqlqk.behealthy.gateway.controller.rest.v1.user;
 
+import me.kqlqk.behealthy.gateway.aop.CheckUserId;
 import me.kqlqk.behealthy.gateway.dto.kcalCounterService.DailyFoodDTO;
 import me.kqlqk.behealthy.gateway.exception.exceptions.authenticationService.UserException;
 import me.kqlqk.behealthy.gateway.feign_client.ConditionClient;
@@ -21,11 +22,13 @@ public class UserDailyFoodRestController {
         this.conditionClient = conditionClient;
     }
 
+    @CheckUserId
     @GetMapping("/food")
     public List<DailyFoodDTO> getDailyFoodsForUser(@PathVariable long id) {
         return conditionClient.getDailyFoodsForUser(id);
     }
 
+    @CheckUserId
     @PostMapping("/food")
     public ResponseEntity<?> addDailyFoodsForUser(@PathVariable long id,
                                                   @RequestBody @Valid DailyFoodDTO dailyFoodDTO,
@@ -39,6 +42,7 @@ public class UserDailyFoodRestController {
         return ResponseEntity.ok().build();
     }
 
+    @CheckUserId
     @DeleteMapping("/food")
     public ResponseEntity<?> deleteDailyFoodsForUser(@PathVariable long id,
                                                      @RequestParam long productId,

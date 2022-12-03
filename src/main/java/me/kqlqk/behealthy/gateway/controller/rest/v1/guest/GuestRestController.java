@@ -1,19 +1,16 @@
 package me.kqlqk.behealthy.gateway.controller.rest.v1.guest;
 
 import me.kqlqk.behealthy.gateway.dto.authenticationService.LoginDTO;
-import me.kqlqk.behealthy.gateway.dto.authenticationService.UserAuthDTO;
-import me.kqlqk.behealthy.gateway.exception.exceptions.authenticationService.UserException;
-import me.kqlqk.behealthy.gateway.exception.exceptions.authenticationService.UserNotFoundException;
+import me.kqlqk.behealthy.gateway.dto.authenticationService.TokensDTO;
+import me.kqlqk.behealthy.gateway.dto.authenticationService.UserDTO;
 import me.kqlqk.behealthy.gateway.feign_client.AuthenticationClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -25,37 +22,23 @@ public class GuestRestController {
         this.authenticationClient = authenticationClient;
     }
 
-    @PostMapping("/registration")
-    public ResponseEntity<?> createUser(@RequestBody @Valid UserAuthDTO userAuthDTO, HttpServletResponse response) {
-        authenticationClient.createUser(userAuthDTO);
-
-        if (response.getStatus() != 200) {
-            return ResponseEntity.status(response.getStatus()).build();
-        }
-
-        return ResponseEntity.ok().build();
-    }
-
     @PostMapping("/login")
-    public ResponseEntity<?> logInUser(@RequestBody @Valid LoginDTO loginDTO, HttpServletResponse response) {
-        UserAuthDTO savedUser;
-
-        try {
-            savedUser = authenticationClient.getUserByEmail(loginDTO.getEmail());
-        } catch (UserNotFoundException e) {
-            throw new UserNotFoundException("Bad credentials");
-        }
-
-        if (!authenticationClient.checkPassword(savedUser.getId(), loginDTO.getPassword()).isValid()) {
-            throw new UserException("Bad credentials");
-        }
-
-
-        if (response.getStatus() != 200) {
-            return ResponseEntity.status(response.getStatus()).build();
-        }
-
-        return ResponseEntity.ok().build();
+    public Map<String, String> logInUser(@RequestBody LoginDTO loginDTO) {
+        return authenticationClient.login(loginDTO);
     }
 
+    @PostMapping("/registration")
+    public Map<String, String> createUser(@RequestBody UserDTO userDTO) {
+        return authenticationClient.registration(userDTO);
+    }
+
+    @PostMapping("/access")
+    public Map<String, String> getNewAccessToken(@RequestBody TokensDTO tokensDTO) {
+        return authenticationClient.getNewAccessToken(tokensDTO);
+    }
+
+    @PostMapping("/update")
+    public TokensDTO updateTokens(@RequestBody TokensDTO tokensDTO) {
+        return authenticationClient.updateTokens(tokensDTO);
+    }
 }
