@@ -1,5 +1,6 @@
 package me.kqlqk.behealthy.gateway.aop;
 
+import lombok.extern.slf4j.Slf4j;
 import me.kqlqk.behealthy.gateway.dto.authenticationService.TokensDTO;
 import me.kqlqk.behealthy.gateway.dto.authenticationService.UserDTO;
 import me.kqlqk.behealthy.gateway.exception.exceptions.authenticationService.TokenNotFoundException;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Aspect
 @Component
+@Slf4j
 public class SecurityAspect {
     private final AuthenticationClient authenticationClient;
     private final HttpServletRequest request;
@@ -40,7 +42,11 @@ public class SecurityAspect {
         UserDTO userDTO = authenticationClient.getUserByEmail(email);
 
         if (userDTO.getId() != requestUserId) {
+            log.info(userDTO.getEmail() + " failed access to " + request.getRequestURI() + " (securityAspect)");
+
             throw new UserException("Wrong id! Your id = " + userDTO.getId());
+        } else {
+            log.info(userDTO.getEmail() + " got access to " + request.getRequestURI() + " (securityAspect)");
         }
     }
 

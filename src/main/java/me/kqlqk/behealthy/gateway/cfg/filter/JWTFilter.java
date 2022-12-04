@@ -2,6 +2,7 @@ package me.kqlqk.behealthy.gateway.cfg.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import me.kqlqk.behealthy.gateway.dto.ExceptionDTO;
 import me.kqlqk.behealthy.gateway.dto.authenticationService.TokensDTO;
 import me.kqlqk.behealthy.gateway.exception.exceptions.authenticationService.TokenException;
@@ -23,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
+@Slf4j
 public class JWTFilter extends OncePerRequestFilter {
     private final AuthenticationClient authenticationClient;
     private final UserDetailsService userDetailsService;
@@ -90,6 +92,8 @@ public class JWTFilter extends OncePerRequestFilter {
                 userDetailsService.loadUserByUsername(email).getAuthorities());
 
         SecurityContextHolder.getContext().setAuthentication(auth);
+
+        log.info(email + " was authorized to " + request.getRequestURI() + " ( filter)");
 
         fc.doFilter(request, response);
     }
