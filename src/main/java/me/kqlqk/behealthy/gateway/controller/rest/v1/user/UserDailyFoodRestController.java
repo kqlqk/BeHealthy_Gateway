@@ -1,7 +1,7 @@
 package me.kqlqk.behealthy.gateway.controller.rest.v1.user;
 
 import me.kqlqk.behealthy.gateway.aop.CheckUserId;
-import me.kqlqk.behealthy.gateway.dto.kcalCounterService.DailyFoodDTO;
+import me.kqlqk.behealthy.gateway.dto.conditionService.DailyFoodDTO;
 import me.kqlqk.behealthy.gateway.exception.exceptions.authenticationService.UserException;
 import me.kqlqk.behealthy.gateway.feign_client.ConditionClient;
 import org.springframework.beans.factory.annotation.Autowired;

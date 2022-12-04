@@ -1,8 +1,8 @@
 package me.kqlqk.behealthy.gateway.controller.rest.v1.user;
 
 import me.kqlqk.behealthy.gateway.aop.CheckUserId;
-import me.kqlqk.behealthy.gateway.dto.kcalCounterService.KcalsInfoDTO;
-import me.kqlqk.behealthy.gateway.dto.kcalCounterService.UserConditionDTO;
+import me.kqlqk.behealthy.gateway.dto.conditionService.KcalsInfoDTO;
+import me.kqlqk.behealthy.gateway.dto.conditionService.UserConditionDTO;
 import me.kqlqk.behealthy.gateway.feign_client.ConditionClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

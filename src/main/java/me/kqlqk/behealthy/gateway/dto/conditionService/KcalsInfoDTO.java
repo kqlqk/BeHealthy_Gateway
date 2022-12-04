@@ -1,4 +1,4 @@
-package me.kqlqk.behealthy.gateway.dto.kcalCounterService;
+package me.kqlqk.behealthy.gateway.dto.conditionService;
 
 import lombok.Data;
 

@@ -1,8 +1,8 @@
 package me.kqlqk.behealthy.gateway.feign_client;
 
-import me.kqlqk.behealthy.gateway.dto.kcalCounterService.DailyFoodDTO;
-import me.kqlqk.behealthy.gateway.dto.kcalCounterService.KcalsInfoDTO;
-import me.kqlqk.behealthy.gateway.dto.kcalCounterService.UserConditionDTO;
+import me.kqlqk.behealthy.gateway.dto.conditionService.DailyFoodDTO;
+import me.kqlqk.behealthy.gateway.dto.conditionService.KcalsInfoDTO;
+import me.kqlqk.behealthy.gateway.dto.conditionService.UserConditionDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
