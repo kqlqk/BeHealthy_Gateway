@@ -7,6 +7,7 @@ import me.kqlqk.behealthy.gateway.exception.exceptions.IsOnDevelopingException;
 import me.kqlqk.behealthy.gateway.exception.exceptions.authenticationService.*;
 import me.kqlqk.behealthy.gateway.exception.exceptions.conditionService.UserConditionAlreadyExistsException;
 import me.kqlqk.behealthy.gateway.exception.exceptions.conditionService.UserConditionNotFoundException;
+import me.kqlqk.behealthy.gateway.exception.exceptions.workoutService.ExerciseNotFoundException;
 import me.kqlqk.behealthy.gateway.exception.exceptions.workoutService.WorkoutNotFoundException;
 import org.springframework.stereotype.Component;
 
@@ -52,6 +53,8 @@ public class CustomErrorDecoder implements ErrorDecoder {
             throw new TokenAlreadyExistsException(getErrorMessageWithoutPrefix(errorMessage, "TokenAlreadyExistsException"));
         } else if (errorMessage.startsWith("TokenNotFound")) {
             throw new TokenNotFoundException(getErrorMessageWithoutPrefix(errorMessage, "TokenNotFound"));
+        } else if (errorMessage.startsWith("ExerciseNotFound")) {
+            throw new ExerciseNotFoundException(getErrorMessageWithoutPrefix(errorMessage, "ExerciseNotFound"));
         } else {
             throw new RuntimeException(errorMessage);
         }

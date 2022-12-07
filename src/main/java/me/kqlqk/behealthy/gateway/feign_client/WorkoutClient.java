@@ -1,5 +1,6 @@
 package me.kqlqk.behealthy.gateway.feign_client;
 
+import me.kqlqk.behealthy.gateway.dto.workoutService.ExerciseDTO;
 import me.kqlqk.behealthy.gateway.dto.workoutService.WorkoutInfoDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
@@ -17,4 +18,10 @@ public interface WorkoutClient {
 
     @PutMapping("/api/v1/workout")
     void updateWorkout(@RequestParam long userId, @RequestBody WorkoutInfoDTO workoutInfoDTO);
+
+    @GetMapping("/api/v1/exercises")
+    ExerciseDTO getExerciseByName(@RequestParam String name);
+
+    @GetMapping("/api/v1/exercises")
+    List<ExerciseDTO> getExercisesByMuscleGroup(@RequestParam String muscleGroup);
 }

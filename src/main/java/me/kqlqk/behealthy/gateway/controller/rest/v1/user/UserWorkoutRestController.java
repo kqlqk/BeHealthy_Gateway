@@ -3,6 +3,7 @@ package me.kqlqk.behealthy.gateway.controller.rest.v1.user;
 import com.fasterxml.jackson.annotation.JsonView;
 import me.kqlqk.behealthy.gateway.aop.CheckUserId;
 import me.kqlqk.behealthy.gateway.dto.workoutService.WorkoutInfoDTO;
+import me.kqlqk.behealthy.gateway.exception.exceptions.workoutService.ExerciseNotFoundException;
 import me.kqlqk.behealthy.gateway.feign_client.WorkoutClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -43,5 +44,25 @@ public class UserWorkoutRestController {
         workoutClient.updateWorkout(id, workoutInfoDTO);
 
         return ResponseEntity.ok().build();
+    }
+
+    @CheckUserId
+    @GetMapping("/exercises")
+    public ResponseEntity<?> getExercisesByParams(@RequestParam(required = false) String name,
+                                                  @RequestParam(required = false) String muscleGroup,
+                                                  @PathVariable long id) {
+
+        if (name == null && muscleGroup == null) {
+            throw new ExerciseNotFoundException("was not provided 'name' or 'muscleGroup'");
+        }
+        if (name != null && muscleGroup != null) {
+            throw new ExerciseNotFoundException("provide only 1 filter");
+        }
+
+        if (name != null) {
+            return ResponseEntity.ok(workoutClient.getExerciseByName(name));
+        } else {
+            return ResponseEntity.ok(workoutClient.getExercisesByMuscleGroup(muscleGroup));
+        }
     }
 }
