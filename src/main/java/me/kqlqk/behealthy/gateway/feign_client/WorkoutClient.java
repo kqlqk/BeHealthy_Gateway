@@ -2,12 +2,16 @@ package me.kqlqk.behealthy.gateway.feign_client;
 
 import me.kqlqk.behealthy.gateway.dto.workoutService.ExerciseDTO;
 import me.kqlqk.behealthy.gateway.dto.workoutService.WorkoutInfoDTO;
+import me.kqlqk.behealthy.gateway.exception.exceptions.MicroserviceException;
+import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
-@FeignClient(name = "workoutService")
+@FeignClient(name = "workoutService", fallbackFactory = WorkoutClient.Fallback.class)
 public interface WorkoutClient {
 
     @GetMapping("/api/v1/workout")
@@ -24,4 +28,21 @@ public interface WorkoutClient {
 
     @GetMapping("/api/v1/exercises")
     List<ExerciseDTO> getExercisesByMuscleGroup(@RequestParam String muscleGroup);
+
+
+    @Component
+    class Fallback implements FallbackFactory<WorkoutClient> {
+        @Override
+        public WorkoutClient create(Throwable cause) {
+            if (cause instanceof TimeoutException) {
+                throw new MicroserviceException("Service is unavailable");
+            }
+
+            if (cause instanceof RuntimeException) {
+                throw (RuntimeException) cause;
+            } else {
+                throw new RuntimeException("Unhandled exception: " + cause.getMessage());
+            }
+        }
+    }
 }

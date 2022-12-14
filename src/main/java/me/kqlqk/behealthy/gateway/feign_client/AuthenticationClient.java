@@ -4,12 +4,16 @@ import me.kqlqk.behealthy.gateway.dto.ValidateDTO;
 import me.kqlqk.behealthy.gateway.dto.authenticationService.LoginDTO;
 import me.kqlqk.behealthy.gateway.dto.authenticationService.TokensDTO;
 import me.kqlqk.behealthy.gateway.dto.authenticationService.UserDTO;
+import me.kqlqk.behealthy.gateway.exception.exceptions.MicroserviceException;
+import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.concurrent.TimeoutException;
 
-@FeignClient(name = "authenticationService")
+@FeignClient(name = "authenticationService", fallbackFactory = AuthenticationClient.Fallback.class)
 public interface AuthenticationClient {
 
     @GetMapping("/api/v1/users/{id}")
@@ -41,4 +45,21 @@ public interface AuthenticationClient {
 
     @PostMapping("/api/v1/auth/registration")
     Map<String, String> registration(@RequestBody UserDTO userDTO);
+
+
+    @Component
+    class Fallback implements FallbackFactory<AuthenticationClient> {
+        @Override
+        public AuthenticationClient create(Throwable cause) {
+            if (cause instanceof TimeoutException) {
+                throw new MicroserviceException("Service is unavailable");
+            }
+
+            if (cause instanceof RuntimeException) {
+                throw (RuntimeException) cause;
+            } else {
+                throw new RuntimeException("Unhandled exception: " + cause.getMessage());
+            }
+        }
+    }
 }

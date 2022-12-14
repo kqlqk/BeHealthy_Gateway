@@ -1,9 +1,11 @@
 package me.kqlqk.behealthy.gateway.feign_client;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Response;
 import feign.codec.ErrorDecoder;
 import me.kqlqk.behealthy.gateway.exception.exceptions.IsOnDevelopingException;
+import me.kqlqk.behealthy.gateway.exception.exceptions.MicroserviceException;
 import me.kqlqk.behealthy.gateway.exception.exceptions.authenticationService.*;
 import me.kqlqk.behealthy.gateway.exception.exceptions.conditionService.UserConditionAlreadyExistsException;
 import me.kqlqk.behealthy.gateway.exception.exceptions.conditionService.UserConditionNotFoundException;
@@ -26,6 +28,10 @@ public class CustomErrorDecoder implements ErrorDecoder {
             ObjectMapper objectMapper = new ObjectMapper();
             info = objectMapper.readValue(body, Map.class);
         } catch (IOException e) {
+            if (e instanceof JsonParseException) {
+                throw new MicroserviceException("Service is unavailable");
+            }
+
             throw new RuntimeException(e);
         }
 
@@ -49,16 +55,15 @@ public class CustomErrorDecoder implements ErrorDecoder {
             throw new UserNotFoundException(getErrorMessageWithoutPrefix(errorMessage, "UserNotFound"));
         } else if (errorMessage.startsWith("Token")) {
             throw new TokenException(getErrorMessageWithoutPrefix(errorMessage, "Token"));
-        } else if (errorMessage.startsWith("TokenAlreadyExistsException")) {
-            throw new TokenAlreadyExistsException(getErrorMessageWithoutPrefix(errorMessage, "TokenAlreadyExistsException"));
+        } else if (errorMessage.startsWith("TokenAlreadyExists")) {
+            throw new TokenAlreadyExistsException(getErrorMessageWithoutPrefix(errorMessage, "TokenAlreadyExists"));
         } else if (errorMessage.startsWith("TokenNotFound")) {
             throw new TokenNotFoundException(getErrorMessageWithoutPrefix(errorMessage, "TokenNotFound"));
         } else if (errorMessage.startsWith("ExerciseNotFound")) {
             throw new ExerciseNotFoundException(getErrorMessageWithoutPrefix(errorMessage, "ExerciseNotFound"));
-        } else {
-            throw new RuntimeException(errorMessage);
         }
 
+        return null;
     }
 
     private String getErrorMessageWithoutPrefix(String errorWithPrefix, String prefix) {
@@ -67,3 +72,4 @@ public class CustomErrorDecoder implements ErrorDecoder {
         return arr[1];
     }
 }
+
