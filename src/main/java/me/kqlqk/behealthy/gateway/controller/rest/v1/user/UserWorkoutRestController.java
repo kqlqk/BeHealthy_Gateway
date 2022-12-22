@@ -1,6 +1,5 @@
 package me.kqlqk.behealthy.gateway.controller.rest.v1.user;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import me.kqlqk.behealthy.gateway.aop.CheckUserId;
 import me.kqlqk.behealthy.gateway.dto.workoutService.WorkoutInfoDTO;
 import me.kqlqk.behealthy.gateway.exception.exceptions.workoutService.ExerciseNotFoundException;
@@ -25,7 +24,6 @@ public class UserWorkoutRestController {
 
     @CheckUserId
     @GetMapping("/workout")
-    @JsonView(WorkoutInfoDTO.WithoutUserIdView.class)
     public List<WorkoutInfoDTO> getWorkout(@PathVariable long id) {
         return workoutClient.getWorkout(id);
     }
