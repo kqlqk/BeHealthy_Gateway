@@ -1,6 +1,8 @@
 package me.kqlqk.behealthy.gateway.exception.exceptions.authenticationService;
 
-public class UserException extends RuntimeException {
+import com.netflix.hystrix.exception.ExceptionNotWrappedByHystrix;
+
+public class UserException extends RuntimeException implements ExceptionNotWrappedByHystrix {
     public UserException(String message) {
         super(message);
     }
