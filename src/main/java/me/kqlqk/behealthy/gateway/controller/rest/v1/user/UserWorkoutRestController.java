@@ -28,13 +28,14 @@ public class UserWorkoutRestController {
     @GetMapping("/workout")
     @JsonView(ExerciseDTO.WithoutAlternativeId.class)
     public List<WorkoutInfoDTO> getWorkout(@PathVariable long id) {
-        List<WorkoutInfoDTO> workouts = workoutClient.getWorkout(id);
+        List<WorkoutInfoDTO> workoutInfoDTOS = workoutClient.getWorkout(id);
 
-        for (WorkoutInfoDTO workoutInfoDTO : workouts) {
-            workoutInfoDTO.getExercise().setHasAlternative(workoutInfoDTO.getExercise().getAlternativeId() != null);
+        for (WorkoutInfoDTO workoutInfoDTO : workoutInfoDTOS) {
+            ExerciseDTO exerciseDTO = workoutInfoDTO.getExercise();
+            exerciseDTO.setHasAlternative(exerciseDTO.getAlternativeId() != null);
         }
 
-        return workouts;
+        return workoutInfoDTOS;
     }
 
     @CheckUserId
@@ -55,20 +56,30 @@ public class UserWorkoutRestController {
 
     @CheckUserId
     @GetMapping("/exercises")
+    @JsonView(ExerciseDTO.WithoutAlternativeId.class)
     public ResponseEntity<?> getExercisesByParams(@PathVariable long id,
                                                   @RequestParam(required = false) String name,
                                                   @RequestParam(required = false) String muscleGroup) {
-
         if (name == null && muscleGroup == null) {
-            throw new ExerciseNotFoundException("was not provided 'name' or 'muscleGroup'");
+            throw new ExerciseNotFoundException("Was not provided 'name' or 'muscleGroup'");
         }
         if (name != null && muscleGroup != null) {
-            throw new ExerciseNotFoundException("provide only 1 filter");
+            throw new ExerciseNotFoundException("Provide only 1 filter");
         }
 
         if (name != null) {
-            return ResponseEntity.ok(workoutClient.getExerciseByName(name));
+            ExerciseDTO exerciseDTO = workoutClient.getExerciseByName(name);
+
+            exerciseDTO.setHasAlternative(exerciseDTO.getAlternativeId() != null);
+
+            return ResponseEntity.ok(exerciseDTO);
         } else {
+            List<ExerciseDTO> exerciseDTOS = workoutClient.getExercisesByMuscleGroup(muscleGroup);
+
+            for (ExerciseDTO exerciseDTO : exerciseDTOS) {
+                exerciseDTO.setHasAlternative(exerciseDTO.getAlternativeId() != null);
+            }
+
             return ResponseEntity.ok(workoutClient.getExercisesByMuscleGroup(muscleGroup));
         }
     }
