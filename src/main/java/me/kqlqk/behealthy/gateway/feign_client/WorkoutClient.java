@@ -29,6 +29,9 @@ public interface WorkoutClient {
     @GetMapping("/api/v1/exercises")
     List<ExerciseDTO> getExercisesByMuscleGroup(@RequestParam String muscleGroup);
 
+    @PutMapping("/api/v1/workout/alternative")
+    void updateWorkoutWithAlternativeExercise(@RequestParam long userId,
+                                              @RequestParam String exerciseNameToChange);
 
     @Component
     class Fallback implements FallbackFactory<WorkoutClient> {

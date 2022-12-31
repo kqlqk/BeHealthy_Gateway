@@ -1,6 +1,8 @@
 package me.kqlqk.behealthy.gateway.controller.rest.v1.user;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import me.kqlqk.behealthy.gateway.aop.CheckUserId;
+import me.kqlqk.behealthy.gateway.dto.workoutService.ExerciseDTO;
 import me.kqlqk.behealthy.gateway.dto.workoutService.WorkoutInfoDTO;
 import me.kqlqk.behealthy.gateway.exception.exceptions.workoutService.ExerciseNotFoundException;
 import me.kqlqk.behealthy.gateway.feign_client.WorkoutClient;
@@ -24,8 +26,15 @@ public class UserWorkoutRestController {
 
     @CheckUserId
     @GetMapping("/workout")
+    @JsonView(ExerciseDTO.WithoutAlternativeId.class)
     public List<WorkoutInfoDTO> getWorkout(@PathVariable long id) {
-        return workoutClient.getWorkout(id);
+        List<WorkoutInfoDTO> workouts = workoutClient.getWorkout(id);
+
+        for (WorkoutInfoDTO workoutInfoDTO : workouts) {
+            workoutInfoDTO.getExercise().setHasAlternative(workoutInfoDTO.getExercise().getAlternativeId() != null);
+        }
+
+        return workouts;
     }
 
     @CheckUserId
@@ -46,9 +55,9 @@ public class UserWorkoutRestController {
 
     @CheckUserId
     @GetMapping("/exercises")
-    public ResponseEntity<?> getExercisesByParams(@RequestParam(required = false) String name,
-                                                  @RequestParam(required = false) String muscleGroup,
-                                                  @PathVariable long id) {
+    public ResponseEntity<?> getExercisesByParams(@PathVariable long id,
+                                                  @RequestParam(required = false) String name,
+                                                  @RequestParam(required = false) String muscleGroup) {
 
         if (name == null && muscleGroup == null) {
             throw new ExerciseNotFoundException("was not provided 'name' or 'muscleGroup'");
@@ -62,5 +71,14 @@ public class UserWorkoutRestController {
         } else {
             return ResponseEntity.ok(workoutClient.getExercisesByMuscleGroup(muscleGroup));
         }
+    }
+
+    @CheckUserId
+    @PutMapping("/workout/alternative")
+    public ResponseEntity<?> updateWorkoutWithAlternativeExercise(@PathVariable long id,
+                                                                  @RequestParam String exercise) {
+        workoutClient.updateWorkoutWithAlternativeExercise(id, exercise);
+
+        return ResponseEntity.ok().build();
     }
 }
