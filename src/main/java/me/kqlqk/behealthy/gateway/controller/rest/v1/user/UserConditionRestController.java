@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @RestController
@@ -30,13 +29,8 @@ public class UserConditionRestController {
     @CheckUserId
     @PutMapping("/condition")
     public ResponseEntity<?> updateUserCondition(@PathVariable long id,
-                                                 @RequestBody @Valid UserConditionDTO userConditionDTO,
-                                                 HttpServletResponse response) {
+                                                 @RequestBody @Valid UserConditionDTO userConditionDTO) {
         conditionClient.updateUserCondition(id, userConditionDTO);
-
-        if (response.getStatus() != 200) {
-            return ResponseEntity.status(response.getStatus()).build();
-        }
 
         return ResponseEntity.ok().build();
     }
@@ -44,13 +38,8 @@ public class UserConditionRestController {
     @CheckUserId
     @PostMapping("/condition")
     public ResponseEntity<?> createUserCondition(@PathVariable long id,
-                                                 @RequestBody @Valid UserConditionDTO userConditionDTO,
-                                                 HttpServletResponse response) {
+                                                 @RequestBody @Valid UserConditionDTO userConditionDTO) {
         conditionClient.createUserCondition(id, userConditionDTO);
-
-        if (response.getStatus() != 200) {
-            return ResponseEntity.status(response.getStatus()).build();
-        }
 
         return ResponseEntity.ok().build();
     }

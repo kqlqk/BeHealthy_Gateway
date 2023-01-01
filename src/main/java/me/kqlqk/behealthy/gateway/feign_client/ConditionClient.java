@@ -33,7 +33,7 @@ public interface ConditionClient {
     void addDailyFoodForUser(@RequestParam long userId, @RequestBody DailyFoodDTO dailyFoodDTO);
 
     @DeleteMapping("/api/v1/food")
-    void deleteDailyFoodFromUser(@RequestParam long productId);
+    void deleteDailyFoodFromUser(@RequestParam long productId, @RequestParam long userId);
 
 
     @Component
