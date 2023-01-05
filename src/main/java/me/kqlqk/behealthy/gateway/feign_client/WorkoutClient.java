@@ -1,6 +1,7 @@
 package me.kqlqk.behealthy.gateway.feign_client;
 
 import me.kqlqk.behealthy.gateway.dto.workoutService.ExerciseDTO;
+import me.kqlqk.behealthy.gateway.dto.workoutService.UserWorkoutDTO;
 import me.kqlqk.behealthy.gateway.dto.workoutService.WorkoutInfoDTO;
 import me.kqlqk.behealthy.gateway.exception.exceptions.MicroserviceException;
 import org.springframework.cloud.openfeign.FallbackFactory;
@@ -30,8 +31,21 @@ public interface WorkoutClient {
     List<ExerciseDTO> getExercisesByMuscleGroup(@RequestParam String muscleGroup);
 
     @PutMapping("/api/v1/workout/alternative")
-    void updateWorkoutWithAlternativeExercise(@RequestParam long userId,
-                                              @RequestParam String exerciseNameToChange);
+    void updateWorkoutWithAlternativeExercise(@RequestParam long userId, @RequestParam String exerciseNameToChange);
+
+    @GetMapping("/api/v1/user/workout")
+    List<UserWorkoutDTO> getUserWorkout(@RequestParam long userId);
+
+    @PostMapping("/api/v1/user/workout")
+    void addExercise(@RequestParam long userId, @RequestBody UserWorkoutDTO userWorkoutDTO);
+
+    @DeleteMapping("/api/v1/user/workout")
+    void removeExerciseByExerciseId(@RequestParam long userId,
+                                    @RequestParam(required = false) Long exerciseId);
+
+    @DeleteMapping("/api/v1/user/workout")
+    void removeExerciseByExerciseName(@RequestParam long userId,
+                                      @RequestParam(required = false) String exerciseName);
 
     @Component
     class Fallback implements FallbackFactory<WorkoutClient> {
@@ -40,7 +54,6 @@ public interface WorkoutClient {
             if (cause instanceof TimeoutException) {
                 throw new MicroserviceException("Service is unavailable");
             }
-
             if (cause instanceof RuntimeException) {
                 throw (RuntimeException) cause;
             } else {
