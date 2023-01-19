@@ -2,7 +2,6 @@ package me.kqlqk.behealthy.gateway.controller.rest.v1.user;
 
 import me.kqlqk.behealthy.gateway.aop.CheckUserId;
 import me.kqlqk.behealthy.gateway.dto.workoutService.UserWorkoutDTO;
-import me.kqlqk.behealthy.gateway.exception.exceptions.workoutService.ExerciseNotFoundException;
 import me.kqlqk.behealthy.gateway.feign_client.WorkoutClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/users/{id}/own")
+@RequestMapping("/api/v1/users/{id}/")
 public class UserOwnWorkoutRestController {
     private final WorkoutClient workoutClient;
 
@@ -21,13 +20,13 @@ public class UserOwnWorkoutRestController {
     }
 
     @CheckUserId
-    @GetMapping("/workout")
+    @GetMapping("/workout/own")
     public List<UserWorkoutDTO> getUserWorkout(@PathVariable long id) {
         return workoutClient.getUserWorkout(id);
     }
 
     @CheckUserId
-    @PostMapping("/workout")
+    @PostMapping("/workout/own")
     public ResponseEntity<?> addExercise(@PathVariable long id, @RequestBody UserWorkoutDTO userWorkoutDTO) {
         workoutClient.addExercise(id, userWorkoutDTO);
 
@@ -35,21 +34,9 @@ public class UserOwnWorkoutRestController {
     }
 
     @CheckUserId
-    @DeleteMapping("/workout")
-    public ResponseEntity<?> removeExercise(@PathVariable long id,
-                                            @RequestParam(required = false) Long exerciseId,
-                                            @RequestParam(required = false) String exerciseName) {
-        if (exerciseId == null && exerciseName == null) {
-            throw new ExerciseNotFoundException("Provide 'exerciseId' or 'exerciseName'");
-        } else if (exerciseId != null && exerciseName != null) {
-            throw new ExerciseNotFoundException("Provide only 1 filter");
-        }
-
-        if (exerciseId != null) {
-            workoutClient.removeExerciseByExerciseId(id, exerciseId);
-        } else {
-            workoutClient.removeExerciseByExerciseName(id, exerciseName);
-        }
+    @DeleteMapping("/workout/own")
+    public ResponseEntity<?> removeExercise(@PathVariable long id, @RequestParam Long exerciseId) {
+        workoutClient.removeExercise(id, exerciseId);
 
         return ResponseEntity.ok().build();
     }

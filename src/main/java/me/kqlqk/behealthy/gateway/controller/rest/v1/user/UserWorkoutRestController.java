@@ -4,13 +4,11 @@ import com.fasterxml.jackson.annotation.JsonView;
 import me.kqlqk.behealthy.gateway.aop.CheckUserId;
 import me.kqlqk.behealthy.gateway.dto.workoutService.ExerciseDTO;
 import me.kqlqk.behealthy.gateway.dto.workoutService.WorkoutInfoDTO;
-import me.kqlqk.behealthy.gateway.exception.exceptions.workoutService.ExerciseNotFoundException;
 import me.kqlqk.behealthy.gateway.feign_client.WorkoutClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -40,7 +38,7 @@ public class UserWorkoutRestController {
 
     @CheckUserId
     @PostMapping("/workout")
-    public ResponseEntity<?> createWorkout(@PathVariable long id, @RequestBody @Valid WorkoutInfoDTO workoutInfoDTO) {
+    public ResponseEntity<?> createWorkout(@PathVariable long id, @RequestBody WorkoutInfoDTO workoutInfoDTO) {
         workoutClient.createWorkout(id, workoutInfoDTO);
 
         return ResponseEntity.ok().build();
@@ -61,21 +59,19 @@ public class UserWorkoutRestController {
                                                   @RequestParam(required = false) String name,
                                                   @RequestParam(required = false) String muscleGroup) {
         if (name == null && muscleGroup == null) {
-            throw new ExerciseNotFoundException("Was not provided 'name' or 'muscleGroup'");
+            throw new RuntimeException("Was not provided 'name' or 'muscleGroup' filter");
         }
         if (name != null && muscleGroup != null) {
-            throw new ExerciseNotFoundException("Provide only 1 filter");
+            throw new RuntimeException("Provide only 1 filter");
         }
 
         if (name != null) {
             ExerciseDTO exerciseDTO = workoutClient.getExerciseByName(name);
-
             exerciseDTO.setHasAlternative(exerciseDTO.getAlternativeId() != null);
 
             return ResponseEntity.ok(exerciseDTO);
         } else {
             List<ExerciseDTO> exerciseDTOS = workoutClient.getExercisesByMuscleGroup(muscleGroup);
-
             for (ExerciseDTO exerciseDTO : exerciseDTOS) {
                 exerciseDTO.setHasAlternative(exerciseDTO.getAlternativeId() != null);
             }

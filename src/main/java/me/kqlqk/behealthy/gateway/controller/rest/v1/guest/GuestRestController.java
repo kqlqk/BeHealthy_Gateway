@@ -1,6 +1,5 @@
 package me.kqlqk.behealthy.gateway.controller.rest.v1.guest;
 
-import me.kqlqk.behealthy.gateway.dto.authenticationService.LoginDTO;
 import me.kqlqk.behealthy.gateway.dto.authenticationService.TokensDTO;
 import me.kqlqk.behealthy.gateway.dto.authenticationService.UserDTO;
 import me.kqlqk.behealthy.gateway.feign_client.AuthenticationClient;
@@ -23,8 +22,8 @@ public class GuestRestController {
     }
 
     @PostMapping("/login")
-    public Map<String, String> logInUser(@RequestBody LoginDTO loginDTO) {
-        return authenticationClient.login(loginDTO);
+    public Map<String, String> logInUser(@RequestBody UserDTO userDTO) {
+        return authenticationClient.login(userDTO);
     }
 
     @PostMapping("/registration")

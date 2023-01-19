@@ -1,7 +1,8 @@
 package me.kqlqk.behealthy.gateway.controller.rest.v1.user;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import me.kqlqk.behealthy.gateway.aop.CheckUserId;
-import me.kqlqk.behealthy.gateway.dto.conditionService.KcalsInfoDTO;
+import me.kqlqk.behealthy.gateway.dto.conditionService.DailyKcalsDTO;
 import me.kqlqk.behealthy.gateway.dto.conditionService.UserConditionDTO;
 import me.kqlqk.behealthy.gateway.feign_client.ConditionClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ public class UserConditionRestController {
 
     @CheckUserId
     @GetMapping("/condition")
+    @JsonView(UserConditionDTO.WithoutId.class)
     public UserConditionDTO getCurrentUserCondition(@PathVariable long id) {
         return conditionClient.getUserConditionByUserId(id);
     }
@@ -46,7 +48,8 @@ public class UserConditionRestController {
 
     @CheckUserId
     @GetMapping("/kcals")
-    public KcalsInfoDTO getCurrentUserKcalsInfo(@PathVariable long id) {
-        return conditionClient.getKcalsInfoByUserId(id);
+    @JsonView(DailyKcalsDTO.WithoutUserId.class)
+    public DailyKcalsDTO getCurrentUserKcalsInfo(@PathVariable long id) {
+        return conditionClient.getDailyKcalsByUserId(id);
     }
 }
