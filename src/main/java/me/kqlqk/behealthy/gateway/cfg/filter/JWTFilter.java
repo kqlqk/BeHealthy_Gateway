@@ -5,8 +5,6 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import me.kqlqk.behealthy.gateway.dto.ExceptionDTO;
 import me.kqlqk.behealthy.gateway.dto.authenticationService.TokensDTO;
-import me.kqlqk.behealthy.gateway.exception.exceptions.authenticationService.TokenException;
-import me.kqlqk.behealthy.gateway.exception.exceptions.authenticationService.TokenNotFoundException;
 import me.kqlqk.behealthy.gateway.feign_client.AuthenticationClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.HttpMessageNotWritableException;
@@ -57,7 +55,7 @@ public class JWTFilter extends OncePerRequestFilter {
         String accessToken;
         try {
             accessToken = getTokenFromRequest(request);
-        } catch (TokenNotFoundException e) {
+        } catch (RuntimeException e) {
             postException(e, response);
             return;
         }
@@ -74,14 +72,14 @@ public class JWTFilter extends OncePerRequestFilter {
         }
 
         if (!tokenValid) {
-            postException(new TokenException("Token invalid"), response);
+            postException(new RuntimeException("Token invalid"), response);
             return;
         }
 
         String email = "";
 
         try {
-            email = authenticationClient.getEmailFromAccessToken(accessTokenDTO).get("email");
+            email = authenticationClient.getEmailFromAccessToken(accessToken).get("email");
         } catch (RuntimeException e) {
             postException(e, response);
         }
@@ -105,9 +103,9 @@ public class JWTFilter extends OncePerRequestFilter {
             if (authHeader.startsWith("Bearer ")) {
                 return authHeader.substring(7);
             }
-            throw new TokenNotFoundException("Bearer token not found");
+            throw new RuntimeException("Bearer token not found");
         }
-        throw new TokenNotFoundException("Authorization header not found");
+        throw new RuntimeException("Authorization header not found");
     }
 
     private void postException(Exception e, HttpServletResponse response) throws IOException {
