@@ -3,7 +3,6 @@ package me.kqlqk.behealthy.gateway.feign_client;
 import me.kqlqk.behealthy.gateway.dto.workoutService.ExerciseDTO;
 import me.kqlqk.behealthy.gateway.dto.workoutService.UserWorkoutDTO;
 import me.kqlqk.behealthy.gateway.dto.workoutService.WorkoutInfoDTO;
-import me.kqlqk.behealthy.gateway.exception.exceptions.MicroserviceException;
 import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
@@ -40,19 +39,14 @@ public interface WorkoutClient {
     void addExercise(@RequestParam long userId, @RequestBody UserWorkoutDTO userWorkoutDTO);
 
     @DeleteMapping("/api/v1/user/workout")
-    void removeExerciseByExerciseId(@RequestParam long userId,
-                                    @RequestParam(required = false) Long exerciseId);
-
-    @DeleteMapping("/api/v1/user/workout")
-    void removeExerciseByExerciseName(@RequestParam long userId,
-                                      @RequestParam(required = false) String exerciseName);
+    void removeExercise(@RequestParam long userId, @RequestParam Long exerciseId);
 
     @Component
     class Fallback implements FallbackFactory<WorkoutClient> {
         @Override
         public WorkoutClient create(Throwable cause) {
             if (cause instanceof TimeoutException) {
-                throw new MicroserviceException("Service is unavailable");
+                throw new RuntimeException("Service is unavailable");
             }
             if (cause instanceof RuntimeException) {
                 throw (RuntimeException) cause;

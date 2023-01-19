@@ -1,17 +1,16 @@
 package me.kqlqk.behealthy.gateway.feign_client;
 
+import com.netflix.hystrix.exception.HystrixRuntimeException;
+import com.netflix.hystrix.exception.HystrixTimeoutException;
 import me.kqlqk.behealthy.gateway.dto.ValidateDTO;
-import me.kqlqk.behealthy.gateway.dto.authenticationService.LoginDTO;
 import me.kqlqk.behealthy.gateway.dto.authenticationService.TokensDTO;
 import me.kqlqk.behealthy.gateway.dto.authenticationService.UserDTO;
-import me.kqlqk.behealthy.gateway.exception.exceptions.MicroserviceException;
 import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-import java.util.concurrent.TimeoutException;
 
 @FeignClient(name = "authenticationService", fallbackFactory = AuthenticationClient.Fallback.class)
 public interface AuthenticationClient {
@@ -26,7 +25,7 @@ public interface AuthenticationClient {
     void updateUser(@PathVariable long id, @RequestBody UserDTO userDTO);
 
     @PostMapping("/api/v1/users/{id}/password/check")
-    ValidateDTO checkPassword(@PathVariable long id, String decodedPassword);
+    ValidateDTO checkPassword(@PathVariable long id, @RequestBody UserDTO userDTO);
 
     @PostMapping("/api/v1/auth/access")
     Map<String, String> getNewAccessToken(@RequestBody TokensDTO tokensDTO);
@@ -34,14 +33,14 @@ public interface AuthenticationClient {
     @PostMapping("/api/v1/auth/access/validate")
     ValidateDTO validateAccessToken(@RequestBody TokensDTO tokensDTO);
 
-    @PostMapping("/api/v1/auth/access/email")
-    Map<String, String> getEmailFromAccessToken(@RequestBody TokensDTO tokensDTO);
+    @GetMapping("/api/v1/auth/access/email")
+    Map<String, String> getEmailFromAccessToken(@RequestParam String accessToken);
 
     @PostMapping("/api/v1/auth/update")
     TokensDTO updateTokens(@RequestBody TokensDTO tokensDTO);
 
     @PostMapping("/api/v1/auth/login")
-    Map<String, String> login(@RequestBody LoginDTO loginDTO);
+    Map<String, String> login(@RequestBody UserDTO userDTO);
 
     @PostMapping("/api/v1/auth/registration")
     Map<String, String> registration(@RequestBody UserDTO userDTO);
@@ -51,8 +50,8 @@ public interface AuthenticationClient {
     class Fallback implements FallbackFactory<AuthenticationClient> {
         @Override
         public AuthenticationClient create(Throwable cause) {
-            if (cause instanceof TimeoutException) {
-                throw new MicroserviceException("Service is unavailable");
+            if (cause instanceof HystrixTimeoutException || cause instanceof HystrixRuntimeException) {
+                throw new RuntimeException("Service is unavailable");
             }
 
             if (cause instanceof RuntimeException) {

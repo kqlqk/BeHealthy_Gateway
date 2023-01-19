@@ -1,9 +1,8 @@
 package me.kqlqk.behealthy.gateway.feign_client;
 
-import me.kqlqk.behealthy.gateway.dto.conditionService.DailyFoodDTO;
-import me.kqlqk.behealthy.gateway.dto.conditionService.KcalsInfoDTO;
+import me.kqlqk.behealthy.gateway.dto.conditionService.DailyAteFoodDTO;
+import me.kqlqk.behealthy.gateway.dto.conditionService.DailyKcalsDTO;
 import me.kqlqk.behealthy.gateway.dto.conditionService.UserConditionDTO;
-import me.kqlqk.behealthy.gateway.exception.exceptions.MicroserviceException;
 import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
@@ -24,16 +23,16 @@ public interface ConditionClient {
     void updateUserCondition(@RequestParam long userId, @RequestBody UserConditionDTO userConditionDTO);
 
     @GetMapping("/api/v1/kcals")
-    KcalsInfoDTO getKcalsInfoByUserId(@RequestParam long userId);
+    DailyKcalsDTO getDailyKcalsByUserId(@RequestParam long userId);
 
     @GetMapping("/api/v1/food")
-    List<DailyFoodDTO> getDailyFoodsForUser(@RequestParam long userId);
+    List<DailyAteFoodDTO> getDailyAteFoods(@RequestParam long userId);
 
     @PostMapping("/api/v1/food")
-    void addDailyFoodForUser(@RequestParam long userId, @RequestBody DailyFoodDTO dailyFoodDTO);
+    void addDailyAteFood(@RequestParam long userId, @RequestBody DailyAteFoodDTO dailyAteFoodDTO);
 
     @DeleteMapping("/api/v1/food")
-    void deleteDailyFoodFromUser(@RequestParam long productId, @RequestParam long userId);
+    void deleteDailyAteFood(@RequestParam long productId, @RequestParam long userId);
 
 
     @Component
@@ -41,7 +40,7 @@ public interface ConditionClient {
         @Override
         public ConditionClient create(Throwable cause) {
             if (cause instanceof TimeoutException) {
-                throw new MicroserviceException("Service is unavailable");
+                throw new RuntimeException("Service is unavailable");
             }
 
             if (cause instanceof RuntimeException) {
