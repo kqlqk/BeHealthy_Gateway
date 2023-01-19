@@ -4,13 +4,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Response;
 import feign.codec.ErrorDecoder;
-import me.kqlqk.behealthy.gateway.exception.exceptions.IsOnDevelopingException;
-import me.kqlqk.behealthy.gateway.exception.exceptions.MicroserviceException;
-import me.kqlqk.behealthy.gateway.exception.exceptions.authenticationService.*;
-import me.kqlqk.behealthy.gateway.exception.exceptions.conditionService.UserConditionAlreadyExistsException;
-import me.kqlqk.behealthy.gateway.exception.exceptions.conditionService.UserConditionNotFoundException;
-import me.kqlqk.behealthy.gateway.exception.exceptions.workoutService.ExerciseNotFoundException;
-import me.kqlqk.behealthy.gateway.exception.exceptions.workoutService.WorkoutNotFoundException;
+import me.kqlqk.behealthy.gateway.exception.RuntimeNotWrappedByHystrixException;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -29,47 +23,22 @@ public class CustomErrorDecoder implements ErrorDecoder {
             info = objectMapper.readValue(body, Map.class);
         } catch (IOException e) {
             if (e instanceof JsonParseException) {
-                throw new MicroserviceException("Service is unavailable");
+                throw new RuntimeNotWrappedByHystrixException("Service is unavailable");
             }
 
-            throw new RuntimeException(e);
+            throw new RuntimeNotWrappedByHystrixException(e.getMessage());
         }
 
-        String errorMessage = info.get("info") != null ? info.get("info") : "No details about exception";
-
-        if (response.status() == 404) {
-            return new RuntimeException(errorMessage);
+        String errorMessage;
+        if (info.get("info") != null) {
+            errorMessage = info.get("info");
+        } else if (info.get("error") != null) {
+            errorMessage = info.get("error");
+        } else {
+            errorMessage = "No details about exception";
         }
 
-        if (errorMessage.startsWith("WorkoutNotFound")) {
-            throw new WorkoutNotFoundException(getErrorMessageWithoutPrefix(errorMessage, "WorkoutNotFound"));
-        } else if (errorMessage.startsWith("IsOnDeveloping")) {
-            throw new IsOnDevelopingException(getErrorMessageWithoutPrefix(errorMessage, "IsOnDeveloping"));
-        } else if (errorMessage.startsWith("UserConditionAlreadyExists")) {
-            throw new UserConditionAlreadyExistsException(getErrorMessageWithoutPrefix(errorMessage, "UserConditionAlreadyExists"));
-        } else if (errorMessage.startsWith("UserConditionNotFound")) {
-            throw new UserConditionNotFoundException(getErrorMessageWithoutPrefix(errorMessage, "UserConditionNotFound"));
-        } else if (errorMessage.startsWith("UserAlreadyExists")) {
-            throw new UserAlreadyExistsException(getErrorMessageWithoutPrefix(errorMessage, "UserAlreadyExists"));
-        } else if (errorMessage.startsWith("UserNotFound")) {
-            throw new UserNotFoundException(getErrorMessageWithoutPrefix(errorMessage, "UserNotFound"));
-        } else if (errorMessage.startsWith("Token")) {
-            throw new TokenException(getErrorMessageWithoutPrefix(errorMessage, "Token"));
-        } else if (errorMessage.startsWith("TokenAlreadyExists")) {
-            throw new TokenAlreadyExistsException(getErrorMessageWithoutPrefix(errorMessage, "TokenAlreadyExists"));
-        } else if (errorMessage.startsWith("TokenNotFound")) {
-            throw new TokenNotFoundException(getErrorMessageWithoutPrefix(errorMessage, "TokenNotFound"));
-        } else if (errorMessage.startsWith("ExerciseNotFound")) {
-            throw new ExerciseNotFoundException(getErrorMessageWithoutPrefix(errorMessage, "ExerciseNotFound"));
-        }
-
-        return null;
-    }
-
-    private String getErrorMessageWithoutPrefix(String errorWithPrefix, String prefix) {
-        String[] arr = errorWithPrefix.split(prefix + " \\| ");
-
-        return arr[1];
+        return new RuntimeNotWrappedByHystrixException(errorMessage);
     }
 }
 
