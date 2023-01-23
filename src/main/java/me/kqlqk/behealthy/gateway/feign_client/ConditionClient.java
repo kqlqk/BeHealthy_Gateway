@@ -1,8 +1,6 @@
 package me.kqlqk.behealthy.gateway.feign_client;
 
-import me.kqlqk.behealthy.gateway.dto.conditionService.DailyAteFoodDTO;
-import me.kqlqk.behealthy.gateway.dto.conditionService.DailyKcalsDTO;
-import me.kqlqk.behealthy.gateway.dto.conditionService.UserConditionDTO;
+import me.kqlqk.behealthy.gateway.dto.conditionService.*;
 import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
@@ -18,6 +16,12 @@ public interface ConditionClient {
 
     @PostMapping("/api/v1/condition")
     void createUserCondition(@RequestParam long userId, @RequestBody UserConditionDTO userConditionDTO);
+
+    @PostMapping("/api/v1/condition/male/fatPercent")
+    void createUserConditionWithoutFatPercentMale(@RequestParam long userId, @RequestBody UserConditionWithoutFatPercentMaleDTO userConditionWithoutFatPercentMaleDTO);
+
+    @PostMapping("/api/v1/condition/female/fatPercent")
+    void createUserConditionWithoutFatPercentFemale(@RequestParam long userId, @RequestBody UserConditionWithoutFatPercentFemaleDTO userConditionWithoutFatPercentFemaleDTO);
 
     @PutMapping("/api/v1/condition")
     void updateUserCondition(@RequestParam long userId, @RequestBody UserConditionDTO userConditionDTO);
