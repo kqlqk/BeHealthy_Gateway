@@ -38,6 +38,11 @@ public interface ConditionClient {
     @DeleteMapping("/api/v1/food")
     void deleteDailyAteFood(@RequestParam long productId, @RequestParam long userId);
 
+    @GetMapping("/api/v1/photo")
+    UserPhotoDTO getUserPhotoByDate(@RequestParam long userId, @RequestParam String date);
+
+    @PostMapping("/api/v1/photo")
+    void saveUserPhoto(@RequestParam long userId, @RequestBody UserPhotoDTO userPhotoDTO);
 
     @Component
     class Fallback implements FallbackFactory<ConditionClient> {
