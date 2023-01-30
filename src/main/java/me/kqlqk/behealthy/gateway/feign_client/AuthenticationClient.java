@@ -28,7 +28,7 @@ public interface AuthenticationClient {
     ValidateDTO checkPassword(@PathVariable long id, @RequestBody UserDTO userDTO);
 
     @PostMapping("/api/v1/auth/access")
-    Map<String, String> getNewAccessToken(@RequestBody TokensDTO tokensDTO);
+    TokensDTO getNewAccessToken(@RequestBody TokensDTO tokensDTO);
 
     @PostMapping("/api/v1/auth/access/validate")
     ValidateDTO validateAccessToken(@RequestBody TokensDTO tokensDTO);
@@ -40,10 +40,10 @@ public interface AuthenticationClient {
     TokensDTO updateTokens(@RequestBody TokensDTO tokensDTO);
 
     @PostMapping("/api/v1/auth/login")
-    Map<String, String> login(@RequestBody UserDTO userDTO);
+    TokensDTO login(@RequestBody UserDTO userDTO);
 
     @PostMapping("/api/v1/auth/registration")
-    Map<String, String> registration(@RequestBody UserDTO userDTO);
+    TokensDTO registration(@RequestBody UserDTO userDTO);
 
 
     @Component

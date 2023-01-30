@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
-
 @RestController
 @RequestMapping("/api/v1")
 public class GuestRestController {
@@ -22,17 +20,17 @@ public class GuestRestController {
     }
 
     @PostMapping("/login")
-    public Map<String, String> logInUser(@RequestBody UserDTO userDTO) {
+    public TokensDTO logInUser(@RequestBody UserDTO userDTO) {
         return authenticationClient.login(userDTO);
     }
 
     @PostMapping("/registration")
-    public Map<String, String> createUser(@RequestBody UserDTO userDTO) {
+    public TokensDTO createUser(@RequestBody UserDTO userDTO) {
         return authenticationClient.registration(userDTO);
     }
 
     @PostMapping("/access")
-    public Map<String, String> getNewAccessToken(@RequestBody TokensDTO tokensDTO) {
+    public TokensDTO getNewAccessToken(@RequestBody TokensDTO tokensDTO) {
         return authenticationClient.getNewAccessToken(tokensDTO);
     }
 
