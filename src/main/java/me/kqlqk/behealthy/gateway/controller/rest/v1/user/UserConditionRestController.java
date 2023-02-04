@@ -68,8 +68,7 @@ public class UserConditionRestController {
 
     @CheckUserId
     @GetMapping("/kcals")
-    @JsonView(DailyKcalsDTO.WithoutUserId.class)
-    public DailyKcalsDTO getCurrentUserKcalsInfo(@PathVariable long id) {
+    public DailyKcalsDTO getCurrentUserDailyKcals(@PathVariable long id) {
         return conditionClient.getDailyKcalsByUserId(id);
     }
 }
