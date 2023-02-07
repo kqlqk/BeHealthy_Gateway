@@ -13,7 +13,7 @@ public class WorkoutInfoDTO {
     private long id;
 
     @JsonView(ExerciseDTO.WithoutAlternativeId.class)
-    private int workoutDay;
+    private int day;
 
     @JsonView(ExerciseDTO.WithoutAlternativeId.class)
     private int numberPerDay;
