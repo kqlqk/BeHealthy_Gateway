@@ -44,6 +44,15 @@ public interface ConditionClient {
     @PostMapping("/api/v1/photo")
     void saveUserPhoto(@RequestParam long userId, @RequestBody UserPhotoDTO userPhotoDTO);
 
+    @GetMapping("/api/v1/own/kcals")
+    OwnDailyKcalsDTO getOwnDailyKcalsByUserId(@RequestParam long userId);
+
+    @PostMapping("/api/v1/own/kcals")
+    OwnDailyKcalsDTO createOwnDailyKcals(@RequestParam long userId, @RequestBody OwnDailyKcalsDTO ownDailyKcalsDTO);
+
+    @PutMapping("/api/v1/own/kcals")
+    OwnDailyKcalsDTO updateOwnDailyKcals(@RequestParam long userId, @RequestBody OwnDailyKcalsDTO ownDailyKcalsDTO);
+
     @Component
     class Fallback implements FallbackFactory<ConditionClient> {
         @Override

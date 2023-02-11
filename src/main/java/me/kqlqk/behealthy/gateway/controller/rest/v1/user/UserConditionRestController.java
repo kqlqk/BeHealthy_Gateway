@@ -2,10 +2,7 @@ package me.kqlqk.behealthy.gateway.controller.rest.v1.user;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import me.kqlqk.behealthy.gateway.aop.CheckUserId;
-import me.kqlqk.behealthy.gateway.dto.conditionService.DailyKcalsDTO;
-import me.kqlqk.behealthy.gateway.dto.conditionService.UserConditionDTO;
-import me.kqlqk.behealthy.gateway.dto.conditionService.UserConditionWithoutFatPercentFemaleDTO;
-import me.kqlqk.behealthy.gateway.dto.conditionService.UserConditionWithoutFatPercentMaleDTO;
+import me.kqlqk.behealthy.gateway.dto.conditionService.*;
 import me.kqlqk.behealthy.gateway.feign_client.ConditionClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -70,5 +67,27 @@ public class UserConditionRestController {
     @GetMapping("/kcals")
     public DailyKcalsDTO getCurrentUserDailyKcals(@PathVariable long id) {
         return conditionClient.getDailyKcalsByUserId(id);
+    }
+
+    @CheckUserId
+    @GetMapping("/own/kcals")
+    public OwnDailyKcalsDTO getOwnDailyKcalsByUserId(@PathVariable long id) {
+        return conditionClient.getOwnDailyKcalsByUserId(id);
+    }
+
+    @CheckUserId
+    @PostMapping("/own/kcals")
+    public ResponseEntity<?> createOwnDailyKcals(@PathVariable long id, @RequestBody OwnDailyKcalsDTO ownDailyKcalsDTO) {
+        conditionClient.createOwnDailyKcals(id, ownDailyKcalsDTO);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @CheckUserId
+    @PutMapping("/own/kcals")
+    public ResponseEntity<?> updateOwnDailyKcals(@PathVariable long id, @RequestBody OwnDailyKcalsDTO ownDailyKcalsDTO) {
+        conditionClient.updateOwnDailyKcals(id, ownDailyKcalsDTO);
+
+        return ResponseEntity.ok().build();
     }
 }
