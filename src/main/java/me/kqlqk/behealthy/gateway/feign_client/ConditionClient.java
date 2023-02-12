@@ -48,10 +48,13 @@ public interface ConditionClient {
     OwnDailyKcalsDTO getOwnDailyKcalsByUserId(@RequestParam long userId);
 
     @PostMapping("/api/v1/own/kcals")
-    OwnDailyKcalsDTO createOwnDailyKcals(@RequestParam long userId, @RequestBody OwnDailyKcalsDTO ownDailyKcalsDTO);
+    void createOwnDailyKcals(@RequestParam long userId, @RequestBody OwnDailyKcalsDTO ownDailyKcalsDTO);
 
     @PutMapping("/api/v1/own/kcals")
-    OwnDailyKcalsDTO updateOwnDailyKcals(@RequestParam long userId, @RequestBody OwnDailyKcalsDTO ownDailyKcalsDTO);
+    void updateOwnDailyKcals(@RequestParam long userId, @RequestBody OwnDailyKcalsDTO ownDailyKcalsDTO);
+
+    @PutMapping("/api/v1/own/kcals/priority")
+    void changePriorityOwnDailyKcals(@RequestParam long userId, @RequestBody OwnDailyKcalsDTO ownDailyKcalsDTO);
 
     @Component
     class Fallback implements FallbackFactory<ConditionClient> {

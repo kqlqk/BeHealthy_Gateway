@@ -90,4 +90,11 @@ public class UserConditionRestController {
 
         return ResponseEntity.ok().build();
     }
+
+    @PutMapping("/own/kcals/priority")
+    public ResponseEntity<?> changePriorityOwnDailyKcals(@PathVariable long id, @RequestBody OwnDailyKcalsDTO ownDailyKcalsDTO) {
+        conditionClient.changePriorityOwnDailyKcals(id, ownDailyKcalsDTO);
+
+        return ResponseEntity.ok().build();
+    }
 }
