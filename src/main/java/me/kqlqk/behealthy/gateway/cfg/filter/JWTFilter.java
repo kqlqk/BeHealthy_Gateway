@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import me.kqlqk.behealthy.gateway.dto.ExceptionDTO;
-import me.kqlqk.behealthy.gateway.dto.authenticationService.TokensDTO;
+import me.kqlqk.behealthy.gateway.dto.authentication_service.AccessTokenDTO;
 import me.kqlqk.behealthy.gateway.feign_client.AuthenticationClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.HttpMessageNotWritableException;
@@ -55,18 +55,18 @@ public class JWTFilter extends OncePerRequestFilter {
         String accessToken;
         try {
             accessToken = getTokenFromRequest(request);
-        } catch (RuntimeException e) {
+        }
+        catch (RuntimeException e) {
             postException(e, response);
             return;
         }
 
         boolean tokenValid;
-        TokensDTO accessTokenDTO = new TokensDTO();
-        accessTokenDTO.setAccessToken(accessToken);
-
+        AccessTokenDTO accessTokenDTO = new AccessTokenDTO(accessToken);
         try {
             tokenValid = authenticationClient.validateAccessToken(accessTokenDTO).isValid();
-        } catch (RuntimeException e) {
+        }
+        catch (RuntimeException e) {
             postException(e, response);
             return;
         }
@@ -76,12 +76,13 @@ public class JWTFilter extends OncePerRequestFilter {
             return;
         }
 
-        String email = "";
-
+        String email;
         try {
-            email = authenticationClient.getEmailFromAccessToken(accessToken).get("email");
-        } catch (RuntimeException e) {
+            email = authenticationClient.getEmailFromAccessToken(accessTokenDTO).get("email");
+        }
+        catch (RuntimeException e) {
             postException(e, response);
+            return;
         }
 
         Authentication auth = new UsernamePasswordAuthenticationToken(
@@ -116,7 +117,8 @@ public class JWTFilter extends OncePerRequestFilter {
 
         if (e instanceof HttpMessageNotWritableException) {
             exceptionDTO.setInfo("Required request body is missing");
-        } else {
+        }
+        else {
             exceptionDTO.setInfo(e.getMessage());
         }
 

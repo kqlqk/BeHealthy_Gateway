@@ -1,7 +1,8 @@
 package me.kqlqk.behealthy.gateway.aop;
 
 import lombok.extern.slf4j.Slf4j;
-import me.kqlqk.behealthy.gateway.dto.authenticationService.UserDTO;
+import me.kqlqk.behealthy.gateway.dto.authentication_service.AccessTokenDTO;
+import me.kqlqk.behealthy.gateway.dto.authentication_service.GetUserDTO;
 import me.kqlqk.behealthy.gateway.feign_client.AuthenticationClient;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -27,7 +28,7 @@ public class SecurityAspect {
     }
 
     @Before("@annotation(CheckUserId)")
-    private void beforeCheckUserIdAnnotation(JoinPoint joinPoint) throws NoSuchFieldException {
+    private void beforeCheckUserIdAnnotation(JoinPoint joinPoint) {
         long requestUserId = 0;
         Method m = ((MethodSignature) joinPoint.getSignature()).getMethod();
 
@@ -38,15 +39,16 @@ public class SecurityAspect {
             }
         }
 
-        String accessToken = getTokenFromRequest(request);
-        String email = authenticationClient.getEmailFromAccessToken(accessToken).get("email");
-        UserDTO userDTO = authenticationClient.getUserByEmail(email);
+        AccessTokenDTO accessTokenDTO = new AccessTokenDTO(getTokenFromRequest(request));
+        String email = authenticationClient.getEmailFromAccessToken(accessTokenDTO).get("email");
+        GetUserDTO userDTO = authenticationClient.getUserByEmail(email);
 
         if (userDTO.getId() != requestUserId) {
             log.info(userDTO.getEmail() + " failed access to " + request.getRequestURI() + " (securityAspect)");
 
             throw new RuntimeException("Wrong id! Your id = " + userDTO.getId());
-        } else {
+        }
+        else {
             log.info(userDTO.getEmail() + " got access to " + request.getRequestURI() + " (securityAspect)");
         }
     }

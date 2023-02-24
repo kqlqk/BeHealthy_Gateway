@@ -1,9 +1,8 @@
-package me.kqlqk.behealthy.gateway.controller.rest.v1.user;
+package me.kqlqk.behealthy.gateway.controller.rest.v1.user.workout_service;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import me.kqlqk.behealthy.gateway.aop.CheckUserId;
-import me.kqlqk.behealthy.gateway.dto.workoutService.ExerciseDTO;
-import me.kqlqk.behealthy.gateway.dto.workoutService.WorkoutInfoDTO;
+import me.kqlqk.behealthy.gateway.dto.workout_service.AddUpdateWorkoutInfoDTO;
+import me.kqlqk.behealthy.gateway.dto.workout_service.GetWorkoutInfoDTO;
 import me.kqlqk.behealthy.gateway.feign_client.WorkoutClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,48 +12,39 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/users/{id}")
-public class UserWorkoutRestController {
+public class WorkoutInfoRestController {
     private final WorkoutClient workoutClient;
 
     @Autowired
-    public UserWorkoutRestController(WorkoutClient workoutClient) {
+    public WorkoutInfoRestController(WorkoutClient workoutClient) {
         this.workoutClient = workoutClient;
     }
 
 
     @CheckUserId
     @GetMapping("/workout")
-    @JsonView(ExerciseDTO.WithoutAlternativeId.class)
-    public List<WorkoutInfoDTO> getWorkout(@PathVariable long id) {
-        List<WorkoutInfoDTO> workoutInfoDTOS = workoutClient.getWorkout(id);
-
-        for (WorkoutInfoDTO workoutInfoDTO : workoutInfoDTOS) {
-            ExerciseDTO exerciseDTO = workoutInfoDTO.getExercise();
-            exerciseDTO.setHasAlternative(exerciseDTO.getAlternativeId() != null);
-        }
-
-        return workoutInfoDTOS;
+    public List<GetWorkoutInfoDTO> getWorkout(@PathVariable long id) {
+        return workoutClient.getWorkoutInfos(id);
     }
 
     @CheckUserId
     @PostMapping("/workout")
-    public ResponseEntity<?> createWorkout(@PathVariable long id, @RequestBody WorkoutInfoDTO workoutInfoDTO) {
-        workoutClient.createWorkout(id, workoutInfoDTO);
+    public ResponseEntity<?> createWorkout(@PathVariable long id, @RequestBody AddUpdateWorkoutInfoDTO addWorkoutInfoDTO) {
+        workoutClient.createWorkoutInfos(id, addWorkoutInfoDTO);
 
         return ResponseEntity.ok().build();
     }
 
     @CheckUserId
     @PutMapping("/workout")
-    public ResponseEntity<?> updateWorkout(@PathVariable long id, @RequestBody WorkoutInfoDTO workoutInfoDTO) {
-        workoutClient.updateWorkout(id, workoutInfoDTO);
+    public ResponseEntity<?> updateWorkout(@PathVariable long id, @RequestBody AddUpdateWorkoutInfoDTO updateWorkoutInfoDTO) {
+        workoutClient.updateWorkoutInfos(id, updateWorkoutInfoDTO);
 
         return ResponseEntity.ok().build();
     }
 
     @CheckUserId
     @GetMapping("/exercises")
-    @JsonView(ExerciseDTO.WithoutAlternativeId.class)
     public ResponseEntity<?> getExercisesByParams(@PathVariable long id,
                                                   @RequestParam(required = false) String name,
                                                   @RequestParam(required = false) String muscleGroup) {
@@ -66,16 +56,9 @@ public class UserWorkoutRestController {
         }
 
         if (name != null) {
-            ExerciseDTO exerciseDTO = workoutClient.getExerciseByName(name);
-            exerciseDTO.setHasAlternative(exerciseDTO.getAlternativeId() != null);
-
-            return ResponseEntity.ok(exerciseDTO);
-        } else {
-            List<ExerciseDTO> exerciseDTOS = workoutClient.getExercisesByMuscleGroup(muscleGroup);
-            for (ExerciseDTO exerciseDTO : exerciseDTOS) {
-                exerciseDTO.setHasAlternative(exerciseDTO.getAlternativeId() != null);
-            }
-
+            return ResponseEntity.ok(workoutClient.getExerciseByName(name));
+        }
+        else {
             return ResponseEntity.ok(workoutClient.getExercisesByMuscleGroup(muscleGroup));
         }
     }
