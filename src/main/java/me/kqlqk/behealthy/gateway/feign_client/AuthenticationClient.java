@@ -32,6 +32,9 @@ public interface AuthenticationClient {
     @PostMapping("/api/v1/auth/access/validate")
     ValidateDTO validateAccessToken(@RequestBody AccessTokenDTO accessTokenDTO);
 
+    @PostMapping("/api/v1/auth/refresh/validate")
+    ValidateDTO validateRefreshToken(@RequestBody RefreshTokenDTO refreshTokenDTO);
+
     @PostMapping("/api/v1/auth/access/email")
     Map<String, String> getEmailFromAccessToken(@RequestBody AccessTokenDTO accessTokenDTO);
 

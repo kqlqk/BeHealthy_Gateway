@@ -1,9 +1,7 @@
 package me.kqlqk.behealthy.gateway.controller.rest.v1.guest;
 
-import me.kqlqk.behealthy.gateway.dto.authentication_service.LoginDTO;
-import me.kqlqk.behealthy.gateway.dto.authentication_service.RefreshTokenDTO;
-import me.kqlqk.behealthy.gateway.dto.authentication_service.RegistrationDTO;
-import me.kqlqk.behealthy.gateway.dto.authentication_service.TokensDTO;
+import me.kqlqk.behealthy.gateway.dto.ValidateDTO;
+import me.kqlqk.behealthy.gateway.dto.authentication_service.*;
 import me.kqlqk.behealthy.gateway.feign_client.AuthenticationClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,5 +37,15 @@ public class GuestRestController {
     @PostMapping("/update")
     public TokensDTO updateTokens(@RequestBody RefreshTokenDTO refreshTokenDTO) {
         return authenticationClient.updateTokens(refreshTokenDTO);
+    }
+
+    @PostMapping("/access/validate")
+    public ValidateDTO validateAccessToken(@RequestBody AccessTokenDTO accessTokenDTO) {
+        return authenticationClient.validateAccessToken(accessTokenDTO);
+    }
+
+    @PostMapping("/refresh/validate")
+    public ValidateDTO validateRefreshToken(@RequestBody RefreshTokenDTO refreshTokenDTO) {
+        return authenticationClient.validateRefreshToken(refreshTokenDTO);
     }
 }
