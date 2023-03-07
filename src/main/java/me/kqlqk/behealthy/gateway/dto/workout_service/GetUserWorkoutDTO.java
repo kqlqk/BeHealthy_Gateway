@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class GetUserWorkoutDTO {
     private String exerciseName;
-    private String muscleGroup;
     private int rep;
     private int set;
     private int numberPerDay;

@@ -37,7 +37,7 @@ public interface WorkoutClient {
     @PostMapping("/api/v1/workout/user")
     void addExercise(@RequestParam long userId, @RequestBody AddUserWorkoutDTO addUserWorkoutDTO);
 
-    @DeleteMapping("/api/v1/workout/workout")
+    @DeleteMapping("/api/v1/workout/user")
     void removeExercise(@RequestParam long userId, @RequestParam String exerciseName);
 
     @Component

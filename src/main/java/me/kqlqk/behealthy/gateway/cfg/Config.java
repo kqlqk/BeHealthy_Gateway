@@ -42,7 +42,9 @@ public class Config {
                                         "/api/v1/login",
                                         "/api/v1/registration",
                                         "/api/v1/access",
-                                        "/api/v1/update").permitAll()
+                                        "/api/v1/update",
+                                        "/api/v1/access/validate",
+                                        "/api/v1/refresh/validate").permitAll()
                                 .anyRequest().authenticated()
                                 .and()
                                 .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)

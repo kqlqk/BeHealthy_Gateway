@@ -31,7 +31,9 @@ public class JWTFilter extends OncePerRequestFilter {
             "/api/v1/registration", "/api/v1/registration/",
             "/api/v1/login", "/api/v1/login/",
             "/api/v1/access", "/api/v1/access/",
-            "/api/v1/update", "/api/v1/update/"
+            "/api/v1/update", "/api/v1/update/",
+            "/api/v1/access/validate", "/api/v1/access/validate/",
+            "/api/v1/refresh/validate", "/api/v1/refresh/validate/"
     };
 
     @Autowired

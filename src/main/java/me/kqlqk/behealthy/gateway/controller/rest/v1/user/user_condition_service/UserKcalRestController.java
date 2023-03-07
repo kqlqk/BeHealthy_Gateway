@@ -22,14 +22,14 @@ public class UserKcalRestController {
 
     @CheckUserId
     @GetMapping("/kcal")
-    public GetUserKcalDTO getCurrentUserCondition(@PathVariable long id) {
+    public GetUserKcalDTO getCurrentUserKcal(@PathVariable long id) {
         return userConditionClient.getUserKcalByUserId(id);
     }
 
     @CheckUserId
     @PostMapping("/kcal")
-    public ResponseEntity<?> createUserCondition(@PathVariable long id,
-                                                 @RequestBody @Valid AddUpdateUserKcalDTO addUserKcalDTO) {
+    public ResponseEntity<?> createUserKcal(@PathVariable long id,
+                                            @RequestBody @Valid AddUpdateUserKcalDTO addUserKcalDTO) {
         userConditionClient.createUserKcal(id, addUserKcalDTO);
 
         return ResponseEntity.ok().build();
@@ -37,8 +37,8 @@ public class UserKcalRestController {
 
     @CheckUserId
     @PutMapping("/kcal")
-    public ResponseEntity<?> updateUserCondition(@PathVariable long id,
-                                                 @RequestBody @Valid AddUpdateUserKcalDTO updateUserKcalDTO) {
+    public ResponseEntity<?> updateUserKcal(@PathVariable long id,
+                                            @RequestBody @Valid AddUpdateUserKcalDTO updateUserKcalDTO) {
         userConditionClient.updateUserKcal(id, updateUserKcalDTO);
 
         return ResponseEntity.ok().build();
