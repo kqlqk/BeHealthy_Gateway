@@ -13,8 +13,8 @@ public class AddUpdateUserConditionDTO {
     private int height;
     private int weight;
 
-    @Pattern(regexp = "MIN|AVG|MAX", message = "Please use valid intensity (MIN or AVG or MAX)")
-    private String intensity;
+    @Pattern(regexp = "MIN|AVG|MAX", message = "Please use valid activity (MIN or AVG or MAX)")
+    private String activity;
 
     @Pattern(regexp = "LOSE|MAINTAIN|GAIN", message = "Please use valid goal (LOSE or MAINTAIN or GAIN)")
     private String goal;

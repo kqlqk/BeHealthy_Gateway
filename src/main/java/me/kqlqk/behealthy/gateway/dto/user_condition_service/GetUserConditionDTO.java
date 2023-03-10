@@ -9,7 +9,7 @@ public class GetUserConditionDTO {
     private int age;
     private int height;
     private int weight;
-    private String intensity;
+    private String activity;
     private String goal;
     private double fatPercent;
 }
