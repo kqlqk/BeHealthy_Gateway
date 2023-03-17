@@ -35,7 +35,10 @@ public interface UserConditionClient {
     List<GetDailyAteFoodDTO> getDailyAteFoods(@RequestParam long userId);
 
     @PostMapping("/api/v1/food")
-    void saveDailyAteFood(@RequestParam long userId, @RequestBody AddDailyAteFoodDTO addDailyAteFoodDTO);
+    void saveDailyAteFood(@RequestParam long userId, @RequestBody AddUpdateDailyAteFoodDTO addDailyAteFoodDTO);
+
+    @PutMapping("/api/v1/food")
+    void updateDailyAteFood(@RequestParam long userId, @RequestParam long productId, @RequestBody AddUpdateDailyAteFoodDTO addDailyAteFoodDTO);
 
     @DeleteMapping("/api/v1/food")
     void deleteDailyAteFood(@RequestParam long productId, @RequestParam long userId);
