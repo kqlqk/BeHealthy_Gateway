@@ -21,9 +21,15 @@ public class DailyAteFoodRestController {
     }
 
     @CheckUserId
+    @GetMapping("/food/all")
+    public List<GetDailyAteFoodDTO> getAllDailyAteFoods(@PathVariable long id) {
+        return userConditionClient.getAllDailyAteFoods(id);
+    }
+
+    @CheckUserId
     @GetMapping("/food")
-    public List<GetDailyAteFoodDTO> getDailyAteFoods(@PathVariable long id) {
-        return userConditionClient.getDailyAteFoods(id);
+    public GetDailyAteFoodDTO getDailyAteFoods(@PathVariable long id, @RequestParam String productName) {
+        return userConditionClient.getDailyAteFoods(productName, id);
     }
 
     @CheckUserId
@@ -36,16 +42,16 @@ public class DailyAteFoodRestController {
 
     @CheckUserId
     @PutMapping("/food")
-    public ResponseEntity<?> updateDailyAteFoods(@PathVariable long id, @RequestParam long productId, @RequestBody AddUpdateDailyAteFoodDTO updateDailyAteFoodDTO) {
-        userConditionClient.updateDailyAteFood(id, productId, updateDailyAteFoodDTO);
+    public ResponseEntity<?> updateDailyAteFoods(@PathVariable long id, @RequestBody AddUpdateDailyAteFoodDTO updateDailyAteFoodDTO) {
+        userConditionClient.updateDailyAteFood(id, updateDailyAteFoodDTO);
 
         return ResponseEntity.ok().build();
     }
 
     @CheckUserId
     @DeleteMapping("/food")
-    public ResponseEntity<?> deleteDailyAteFood(@PathVariable long id, @RequestParam long productId) {
-        userConditionClient.deleteDailyAteFood(productId, id);
+    public ResponseEntity<?> deleteDailyAteFood(@PathVariable long id, @RequestParam String productName) {
+        userConditionClient.deleteDailyAteFood(productName, id);
 
         return ResponseEntity.ok().build();
     }

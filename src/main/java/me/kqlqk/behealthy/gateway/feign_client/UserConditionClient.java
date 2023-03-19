@@ -31,17 +31,20 @@ public interface UserConditionClient {
     @PutMapping("/api/v1/kcal")
     void updateUserKcal(@RequestParam long userId, @RequestBody @Valid AddUpdateUserKcalDTO updateUserKcalDTO);
 
+    @GetMapping("/api/v1/food/all")
+    List<GetDailyAteFoodDTO> getAllDailyAteFoods(@RequestParam long userId);
+
     @GetMapping("/api/v1/food")
-    List<GetDailyAteFoodDTO> getDailyAteFoods(@RequestParam long userId);
+    GetDailyAteFoodDTO getDailyAteFoods(@RequestParam String productName, @RequestParam long userId);
 
     @PostMapping("/api/v1/food")
     void saveDailyAteFood(@RequestParam long userId, @RequestBody AddUpdateDailyAteFoodDTO addDailyAteFoodDTO);
 
     @PutMapping("/api/v1/food")
-    void updateDailyAteFood(@RequestParam long userId, @RequestParam long productId, @RequestBody AddUpdateDailyAteFoodDTO addDailyAteFoodDTO);
+    void updateDailyAteFood(@RequestParam long userId, @RequestBody AddUpdateDailyAteFoodDTO addDailyAteFoodDTO);
 
     @DeleteMapping("/api/v1/food")
-    void deleteDailyAteFood(@RequestParam long productId, @RequestParam long userId);
+    void deleteDailyAteFood(@RequestParam String productName, @RequestParam long userId);
 
     @GetMapping("/api/v1/photo")
     GetEncodedPhoto getEncodedPhotoByDate(@RequestParam long userId, @RequestParam String date);
