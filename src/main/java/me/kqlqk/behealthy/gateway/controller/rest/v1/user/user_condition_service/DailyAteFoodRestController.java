@@ -2,13 +2,10 @@ package me.kqlqk.behealthy.gateway.controller.rest.v1.user.user_condition_servic
 
 import me.kqlqk.behealthy.gateway.aop.CheckUserId;
 import me.kqlqk.behealthy.gateway.dto.user_condition_service.AddUpdateDailyAteFoodDTO;
-import me.kqlqk.behealthy.gateway.dto.user_condition_service.GetDailyAteFoodDTO;
 import me.kqlqk.behealthy.gateway.feign_client.UserConditionClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/users/{id}")
@@ -21,15 +18,13 @@ public class DailyAteFoodRestController {
     }
 
     @CheckUserId
-    @GetMapping("/food/all")
-    public List<GetDailyAteFoodDTO> getAllDailyAteFoods(@PathVariable long id) {
-        return userConditionClient.getAllDailyAteFoods(id);
-    }
-
-    @CheckUserId
     @GetMapping("/food")
-    public GetDailyAteFoodDTO getDailyAteFoods(@PathVariable long id, @RequestParam String productName) {
-        return userConditionClient.getDailyAteFoods(productName, id);
+    public ResponseEntity<?> getAllDailyAteFoods(@PathVariable long id, @RequestParam(required = false) String productName) {
+        if (productName != null) {
+            return ResponseEntity.ok(userConditionClient.getSpecifiedDailyAteFoods(productName, id));
+        }
+
+        return ResponseEntity.ok(userConditionClient.getAllDailyAteFoods(id));
     }
 
     @CheckUserId

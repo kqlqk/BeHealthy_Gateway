@@ -31,11 +31,11 @@ public interface UserConditionClient {
     @PutMapping("/api/v1/kcal")
     void updateUserKcal(@RequestParam long userId, @RequestBody @Valid AddUpdateUserKcalDTO updateUserKcalDTO);
 
-    @GetMapping("/api/v1/food/all")
+    @GetMapping("/api/v1/food")
     List<GetDailyAteFoodDTO> getAllDailyAteFoods(@RequestParam long userId);
 
     @GetMapping("/api/v1/food")
-    GetDailyAteFoodDTO getDailyAteFoods(@RequestParam String productName, @RequestParam long userId);
+    GetDailyAteFoodDTO getSpecifiedDailyAteFoods(@RequestParam String productName, @RequestParam long userId);
 
     @PostMapping("/api/v1/food")
     void saveDailyAteFood(@RequestParam long userId, @RequestBody AddUpdateDailyAteFoodDTO addDailyAteFoodDTO);
