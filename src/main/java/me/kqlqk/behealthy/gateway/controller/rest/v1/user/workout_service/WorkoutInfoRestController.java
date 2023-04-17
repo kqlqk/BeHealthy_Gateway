@@ -66,8 +66,8 @@ public class WorkoutInfoRestController {
     @CheckUserId
     @PutMapping("/workout/alternative")
     public ResponseEntity<?> updateWorkoutWithAlternativeExercise(@PathVariable long id,
-                                                                  @RequestParam String exercise) {
-        workoutClient.updateWorkoutWithAlternativeExercise(id, exercise);
+                                                                  @RequestParam String exerciseName) {
+        workoutClient.updateWorkoutWithAlternativeExercise(id, exerciseName);
 
         return ResponseEntity.ok().build();
     }
