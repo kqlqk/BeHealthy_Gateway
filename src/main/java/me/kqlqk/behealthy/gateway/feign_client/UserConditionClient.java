@@ -55,6 +55,9 @@ public interface UserConditionClient {
     @PostMapping("/api/v1/photo")
     void saveUserPhoto(@RequestParam long userId, @RequestBody AddUserPhotoDTO addUserPhotoDTO);
 
+    @DeleteMapping("/api/v1/photo")
+    void deleteUserPhoto(@RequestParam long userId, @RequestParam(required = false) String date);
+
     @Component
     @Slf4j
     class Fallback implements FallbackFactory<UserConditionClient> {

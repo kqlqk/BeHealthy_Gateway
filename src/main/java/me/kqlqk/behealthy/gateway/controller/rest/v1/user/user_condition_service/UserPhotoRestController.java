@@ -38,4 +38,10 @@ public class UserPhotoRestController {
     public void saveUserPhoto(@PathVariable long id, @RequestBody AddUserPhotoDTO addUserPhotoDTO) {
         userConditionClient.saveUserPhoto(id, addUserPhotoDTO);
     }
+
+    @CheckUserId
+    @DeleteMapping("/photo")
+    public void deleteUserPhoto(@PathVariable long id, @RequestParam(required = false) String date) {
+        userConditionClient.deleteUserPhoto(id, date);
+    }
 }
